@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jtpi/models/searchparameters.dart';
+import 'package:jtpi/home.dart';
 import 'dart:convert';
 import 'package:jtpi/screens/searchscreen.dart';
 import 'package:jtpi/screens/filterscreen.dart';
@@ -20,6 +21,8 @@ class mainscreen extends StatefulWidget {
 }
 
 class _mainscreenState extends State<mainscreen> {
+  final FocusNode _focusNode = FocusNode();
+
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<String> bookmarked = [];
   List<SearchParameter> _searchparameter = [
@@ -88,7 +91,13 @@ class _mainscreenState extends State<mainscreen> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
-    getPasses();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        searchT = '';
+        goToSearchScreen();
+      }
+    });
+    //getPasses();
     _getbookmark();
   }
 
@@ -105,7 +114,11 @@ class _mainscreenState extends State<mainscreen> {
 
   void goToSearchScreen() {
     _searchparameter[0].query = searchT;
-    Navigator.push(
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => searchscreen(searchparameter: _searchparameter[0])),
+    );
+    /*Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => searchscreen(searchparameter: _searchparameter[0])),
     ).then((value) {
@@ -114,7 +127,7 @@ class _mainscreenState extends State<mainscreen> {
       setState(() {
         _textEditingController.clear();
       });
-    });
+    });*/
   }
 
   Widget build(BuildContext context) {
@@ -179,6 +192,7 @@ class _mainscreenState extends State<mainscreen> {
                             child: Align(
                               alignment: Alignment.center,
                               child: TextField(
+                                focusNode: _focusNode,
                                 controller: _textEditingController,
                                 onChanged: onSearchTextChanged,
                                 onSubmitted: (text) {

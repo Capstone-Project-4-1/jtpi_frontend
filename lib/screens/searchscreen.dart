@@ -35,6 +35,7 @@ class _searchscreenState extends State<searchscreen> {
 
   late TextEditingController _textEditingController;
   late FocusNode _focusNode;
+  bool _isFocused = false;
   String _searchText = '';
   List<PassSearchResult> _filteredPassDetailInfo = [];
   int _selectedIndex = 0;
@@ -115,7 +116,12 @@ class _searchscreenState extends State<searchscreen> {
     super.initState();
     _textEditingController = TextEditingController(text: widget.searchparameter.query);
     _focusNode = FocusNode();
-    //_focusNode.requestFocus();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
+    _focusNode.requestFocus();
     _textEditingController.addListener(_onSearchTextChanged);
     _searchText = widget.searchparameter.query.toLowerCase(); // 초기 검색어 설정
 
@@ -158,6 +164,7 @@ class _searchscreenState extends State<searchscreen> {
   }
 
   Future<void> _performSearch() async {
+    if (SearchParameters[0].query == '') SearchParameters[0].query = '0';
     if (_searchText.isNotEmpty) {
       List<PassSearchResult> results = await _search(_searchText);
       setState(() {
@@ -193,9 +200,11 @@ class _searchscreenState extends State<searchscreen> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.pop(context); // 현재 화면 닫기
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen(initialTabIndex: 0,)),
+        );
       } else if (_selectedIndex == 1) {
-        Navigator.pop(context); // 현재 화면 닫기
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen(initialTabIndex: 1,)),
@@ -234,23 +243,26 @@ class _searchscreenState extends State<searchscreen> {
             elevation: 0,
             leadingWidth: 40,
             leading: Column(
-              children: [
-                SizedBox(height: 10,),
-                Container(
-                  height: 45,
-                  child: IconButton(
-                    padding: EdgeInsets.zero, // 패딩 설정
-                    constraints: BoxConstraints(),
-                    icon: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Colors.grey.shade800,
+                children: [
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 45,
+                    child: IconButton(
+                      padding: EdgeInsets.zero, // 패딩 설정
+                      constraints: BoxConstraints(),
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.grey.shade800,
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen(initialTabIndex: 0,)),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
                   ),
-                ),
-              ]
+                ]
             ),
             title: Column(
               children: [
@@ -263,10 +275,10 @@ class _searchscreenState extends State<searchscreen> {
                     focusNode: _focusNode,
                     style: TextStyle(fontSize: 17, color: Colors.black),
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 10), // Text 위젯의 위치 조정
-                      hintText: "교통패스를 검색해주세요.",
+                      contentPadding: EdgeInsets.fromLTRB(10, 10, 15, 10), // Text 위젯의 위치 조정
+                      hintText: _isFocused ? '' : "교통패스를 검색해주세요.",
                       hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
-                      prefixIcon: Padding(
+                      suffixIcon: Padding(
                         padding: EdgeInsets.only(left: 8, right: 5), // 아이콘의 왼쪽 여백 설정
                         child: Icon(
                           Icons.search,
@@ -303,6 +315,21 @@ class _searchscreenState extends State<searchscreen> {
             ),
             actions: [SizedBox(width: 18,)],
             titleSpacing: 0,
+          ),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // 배경색을 흰색으로 설정
+              borderRadius: BorderRadius.circular(0), // 컨테이너의 모서리를 둥글게 만듦
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5), // 그림자 색상과 투명도 설정
+                  spreadRadius: 3, // 그림자 퍼짐 정도
+                  blurRadius: 2, // 그림자 흐림 정도
+                  offset: Offset(0, 3), // 그림자 위치 조정 (수평, 수직)
+                ),
+              ],
+            ),
+            child:               TabBar(tabs: myTabs, onTap: _handleTabSelection,),
           ),
           body: Column(
             children: [
@@ -397,29 +424,56 @@ class _searchscreenState extends State<searchscreen> {
                       ),
                       SizedBox(width: 5,),
                       Container(
-                        child: Center(
-                          child: IconButton(
-                            padding: EdgeInsets.zero, // 패딩 설정
-                            constraints: BoxConstraints(),
-                            icon: Icon(
-                              Icons.tune_sharp,
-                              color: Color.fromRGBO(100,100,100, 1.0),
+                          child: Center(
+                            child: IconButton(
+                              padding: EdgeInsets.zero, // 패딩 설정
+                              constraints: BoxConstraints(),
+                              icon: Icon(
+                                Icons.tune_sharp,
+                                color: Color.fromRGBO(100,100,100, 1.0),
+                              ),
+                              iconSize: 25,
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => filterscreen(searchText: _searchText)),
+                                );
+                              },
                             ),
-                            iconSize: 25,
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => filterscreen(searchText: _searchText)),
-                              );
-                            },
-                          ),
-                        )
+                          )
                       ),
                       SizedBox(width: 18,),
                     ]
                 ),
               ),
-              Expanded(
+              _filteredPassDetailInfo.isEmpty
+                  ? Expanded(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center, // 수직 방향 중앙 정렬
+                    crossAxisAlignment: CrossAxisAlignment.center, // 수평 방향 중앙 정렬
+                    children: [
+                      Icon(
+                        Icons.inventory_2_outlined,
+                        size: 48,
+                        color: Colors.deepPurple,
+                      ),
+                      SizedBox(height: 16), // 아이콘과 텍스트 사이의 간격 조절
+                      Text(
+                        '검색 결과가 없어요',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 42),
+                    ],
+                  ),
+                ),
+              )
+                  : Expanded(
                 child:Container(
                     color: Colors.white60,
                     child:GridView.builder(
@@ -569,21 +623,21 @@ class _searchscreenState extends State<searchscreen> {
                     )
                 ),
               ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white, // 배경색을 흰색으로 설정
-            borderRadius: BorderRadius.circular(0), // 컨테이너의 모서리를 둥글게 만듦
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5), // 그림자 색상과 투명도 설정
-                spreadRadius: 3, // 그림자 퍼짐 정도
-                blurRadius: 2, // 그림자 흐림 정도
-                offset: Offset(0, 3), // 그림자 위치 조정 (수평, 수직)
-              ),
-            ],
-          ),
-          child:               TabBar(tabs: myTabs, onTap: _handleTabSelection,),
-        ),
+              /*Container(
+                decoration: BoxDecoration(
+                  color: Colors.white, // 배경색을 흰색으로 설정
+                  borderRadius: BorderRadius.circular(0), // 컨테이너의 모서리를 둥글게 만듦
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5), // 그림자 색상과 투명도 설정
+                      spreadRadius: 3, // 그림자 퍼짐 정도
+                      blurRadius: 2, // 그림자 흐림 정도
+                      offset: Offset(0, 3), // 그림자 위치 조정 (수평, 수직)
+                    ),
+                  ],
+                ),
+                child:               TabBar(tabs: myTabs, onTap: _handleTabSelection,),
+              ),*/
             ],
           )
       ),

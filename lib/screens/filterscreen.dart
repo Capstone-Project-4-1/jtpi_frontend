@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jtpi/models/searchparameters.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:jtpi/models/passsearchresult.dart';
+import 'package:flutter_xlider/flutter_xlider.dart';
+
 
 
 import 'package:jtpi/screens/searchscreen.dart';
@@ -18,6 +22,11 @@ class filterscreen extends StatefulWidget {
 }
 
 class _filterscreenState extends State<filterscreen> {
+  TextEditingController minpriceController = TextEditingController();
+  TextEditingController maxpriceController = TextEditingController();
+  double _lowerValue = 0.0;
+  double _upperValue = 1600.0;
+
   //final List<SearchParameter> SearchParameters = searchparameters;
   List<SearchParameter> SearchParameters = [
     SearchParameter(
@@ -51,6 +60,9 @@ class _filterscreenState extends State<filterscreen> {
     SearchParameters[0].period = 0;
     SearchParameters[0].quantityAdults = 0;
     SearchParameters[0].quantityChildren = 0;
+
+    minpriceController.text = _lowerValue.toInt().toString();
+    maxpriceController.text = _upperValue.toInt().toString();
   }
 
   void swapText() {
@@ -583,6 +595,152 @@ class _filterscreenState extends State<filterscreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 60), // 위쪽 여백 추가
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '가격',
+                        style: TextStyle(
+                          letterSpacing: -0.5,
+                          fontSize: 18, // 텍스트 크기 조정
+                          fontWeight: FontWeight.w800, // 굵은 글꼴로 설정
+                          color: Color.fromRGBO(0, 51, 102, 1.0), // 텍스트 색상 설정
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: TextField(
+                              controller: minpriceController,
+                              onSubmitted: (text) {
+                                setState(() {
+                                  if(double.parse(text) >= double.parse(maxpriceController.text)) {
+                                    minpriceController.text = maxpriceController.text;
+                                    text = maxpriceController.text; }
+                                  _lowerValue = double.parse(text); // 도착지 입력값을 SearchParameters에 저장
+                                });
+                              },
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                suffixIcon: Container(
+                                  child: Text('원', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey.shade800),),
+                                ),
+                                suffixIconConstraints: BoxConstraints(minWidth: 22),
+                                filled: true,
+                                fillColor: Colors.white,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.grey.shade400, width: 0.8),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.grey.shade400, width: 0.8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Icon(Icons.remove, size: 12,),
+                      SizedBox(width: 5),
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: TextField(
+                              controller: maxpriceController,
+                              onSubmitted: (text) {
+                                setState(() {
+                                  if(double.parse(text) <= double.parse(minpriceController.text)) {
+                                    maxpriceController.text = minpriceController.text;
+                                    text = minpriceController.text; }
+                                  _upperValue = double.parse(text); // 도착지 입력값을 SearchParameters에 저장
+                                });
+                              },
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                suffixIcon: Container(
+                                  child: Text('원', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey.shade800),),
+                                ),
+                                suffixIconConstraints: BoxConstraints(minWidth: 22),
+                                filled: true,
+                                fillColor: Colors.white,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.grey.shade400, width: 0.8),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.grey.shade400, width: 0.8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+              Container(
+                margin: EdgeInsets.only(left: 2.5, right: 1.2),
+                child: FlutterSlider(
+                    values: [_lowerValue, _upperValue],
+                    min: 0,
+                    max: 1600,
+                    touchSize: 5,
+                    step: FlutterSliderStep(step: 10),
+                    rangeSlider: true,
+                  tooltip: FlutterSliderTooltip(
+                    disabled: true,
+                  ),
+                    trackBar: FlutterSliderTrackBar(
+                      //activeTrackBarHeight: 5,
+                      activeTrackBar: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.5)),
+                    ),
+                    handlerWidth: 25,
+                    handler: FlutterSliderHandler(
+                      /*decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.blue, width: 1),
+                      ),*/
+                      child: Icon(Icons.circle, color: Colors.transparent),
+                    ),
+                    rightHandler: FlutterSliderHandler(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.blue, width: 1),
+                      ),
+                      child: Icon(Icons.circle, color: Colors.transparent),
+                    ),
+                    handlerAnimation: FlutterSliderHandlerAnimation(
+                        duration: Duration(milliseconds: 700),
+                        scale: 1.1),
+                    onDragging: (handlerIndex, lowerValue, upperValue) {
+                      setState(() {
+                        _lowerValue = lowerValue;
+                        _upperValue = upperValue;
+                        minpriceController.text = lowerValue.toInt().toString();
+                        maxpriceController.text = upperValue.toInt().toString();
+                      });
+                    },
+                  )),
                   SizedBox(height: 60), // 위쪽 여백 추가
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
