@@ -19,7 +19,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
   List<String> bookmarked = [];
 
   List<Bookmark> _filteredPassDetailInfo = [];
-  String _sortBy = '';
+  String _sortBy = '기본순';
   String? selectedValue;
 
   @override
@@ -103,11 +103,10 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
         });
       } else if (sortType == '저가순') {
         // 저가순 정렬
-        _filteredPassDetailInfo.sort((a, b) => a.price.compareTo(b.price));
-      } else if (sortType == '고가순') {
+        _filteredPassDetailInfo.sort((a, b) => (double.parse((a.price).split(',')[0])).compareTo(double.parse((b.price).split(',')[0])));
+      } else if (_sortBy == '고가순') {
         // 고가순 정렬
-        _filteredPassDetailInfo.sort((a, b) => b.price.compareTo(a.price));
-      }
+        _filteredPassDetailInfo.sort((a, b) => (double.parse((b.price).split(',')[0])).compareTo(double.parse((a.price).split(',')[0])));}
     });
   }
 
@@ -142,8 +141,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
         ),
         // 북마크된 항목만 보여주는 GridView.builder
         body: _filteredPassDetailInfo.isEmpty
-            ? Expanded(
-          child: Container(
+            ? Container(
             width: MediaQuery.of(context).size.width,
             color: Colors.white60,
             child: Column(
@@ -165,8 +163,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                 ),
               ],
             ),
-          ),
-        )
+          )
         : Column(
           children: [
             Container(
@@ -278,7 +275,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                     itemBuilder: (context, index) {
                       int id = _filteredPassDetailInfo[index].passid;
                       String title = _filteredPassDetailInfo[index].title;
-                      String price = NumberFormat('#,###').format(_filteredPassDetailInfo[index].price);
+                      String price = _filteredPassDetailInfo[index].price;
                       String cityNames = _filteredPassDetailInfo[index].cityNames;
                       //int bookmark = _filteredPassDetailInfo[index].bookmark;
                       String imageURL = _filteredPassDetailInfo[index].imageURL;
@@ -293,7 +290,9 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                     passinfoscreen(passID: _filteredPassDetailInfo[index].passid),
                               )
                             ).then((value) {
-                              initState();
+                              print('ㄲ');
+                              _getbookmark();
+                              _handleSort(_sortBy);
                             });
                           },
                           child: Padding(
@@ -386,7 +385,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                             ),
                                             SizedBox(height: 2),
                                             Text(
-                                              price + ' 원',
+                                              price.split(',')[0] + ' 원',
                                               softWrap: true,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,

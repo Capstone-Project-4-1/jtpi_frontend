@@ -16,10 +16,10 @@ import 'dart:convert';
 
 
 class searchscreen extends StatefulWidget {
-  //final String searchText;
+  final int screennumber;
   final SearchParameter searchparameter;
 
-  searchscreen({required this.searchparameter});
+  searchscreen({required this.screennumber, required this.searchparameter});
 
   @override
   _searchscreenState createState() => _searchscreenState();
@@ -51,25 +51,38 @@ class _searchscreenState extends State<searchscreen> {
         transportType: '0',
         cityNames: '0',
         period: 0,
+        minPrice: 0,
+        maxPrice: 0,
         quantityAdults: 0,
         quantityChildren: 0
     )
   ];
 
   Future<List<PassSearchResult>> _search(String searchText) async {
-    Map<String, dynamic> searchParams = {
+    /*Map<String, dynamic> searchParams = {
       'query': searchText,
+      'departureCity': SearchParameters[0].departureCity,
+      'arrivalCity': SearchParameters[0].arrivalCity,
+      'transportType': SearchParameters[0].transportType,
+      'cityNames': SearchParameters[0].cityNames,
+      'duration': SearchParameters[0].period,
+      'minPrice': 0,
+      'maxPrice': 0,
+    };*/
+    Map<String, dynamic> searchParams = {
+      'query': '이와테 홀리데이 패스',
       'departureCity': '0',
       'arrivalCity': '0',
       'transportType': '0',
       'cityNames': '0',
-      'duration': double.parse('0'),
-      'quantityAdults': double.parse('0'),
-      'quantityChildren': double.parse('0'),
+      'duration': '0',
+      'minPrice': 0,
+      'maxPrice': 0,
     };
 
     List<PassSearchResult> allResults = [];
     try {
+      print(jsonEncode(searchParams));
       final response = await http.post(
         Uri.parse('http://54.180.69.13:8080/passes/search'),
         headers: <String, String>{
@@ -121,9 +134,10 @@ class _searchscreenState extends State<searchscreen> {
         _isFocused = _focusNode.hasFocus;
       });
     });
-    _focusNode.requestFocus();
+    if (widget.screennumber == 0) _focusNode.requestFocus();
     _textEditingController.addListener(_onSearchTextChanged);
     _searchText = widget.searchparameter.query.toLowerCase(); // 초기 검색어 설정
+    if (widget.searchparameter.query == '0') _textEditingController.text = '';
 
     SearchParameters[0].query = _searchText;
     SearchParameters[0].departureCity = widget.searchparameter.departureCity;
@@ -131,12 +145,16 @@ class _searchscreenState extends State<searchscreen> {
     SearchParameters[0].transportType = widget.searchparameter.transportType;
     SearchParameters[0].cityNames = widget.searchparameter.cityNames;
     SearchParameters[0].period = widget.searchparameter.period;
+    SearchParameters[0].minPrice = widget.searchparameter.minPrice;
+    SearchParameters[0].maxPrice = widget.searchparameter.maxPrice;
     SearchParameters[0].quantityAdults = widget.searchparameter.quantityAdults;
     SearchParameters[0].quantityChildren = widget.searchparameter.quantityChildren;
 
-    _performSearch(); // 초기 검색 수행
+    if (widget.searchparameter.query == '0') _searchText = '';
+
+      _performSearch(); // 초기 검색 수행
     _getbookmark();
-    printing();
+    //printing();
   }
 
   void printing() {
@@ -146,6 +164,8 @@ class _searchscreenState extends State<searchscreen> {
     print('transportType: ${SearchParameters[0].transportType}');
     print('cityNames: ${SearchParameters[0].cityNames}');
     print('period: ${SearchParameters[0].period}');
+    print('minPrice: ${SearchParameters[0].minPrice}');
+    print('maxPrice: ${SearchParameters[0].maxPrice}');
     print('quantityAdults: ${SearchParameters[0].quantityAdults}');
     print('quantityChildren: ${SearchParameters[0].quantityChildren}');
   }
@@ -165,6 +185,7 @@ class _searchscreenState extends State<searchscreen> {
 
   Future<void> _performSearch() async {
     if (SearchParameters[0].query == '') SearchParameters[0].query = '0';
+    printing();
     if (_searchText.isNotEmpty) {
       List<PassSearchResult> results = await _search(_searchText);
       setState(() {
@@ -214,6 +235,7 @@ class _searchscreenState extends State<searchscreen> {
   }
 
   void _handleSort(String sortType) {
+    print(sortType);
     setState(() {
       _sortBy = sortType; // 정렬 기준 변경
       if (_sortBy == '기본순') {
@@ -221,10 +243,10 @@ class _searchscreenState extends State<searchscreen> {
         _performSearch();
       } else if (_sortBy == '저가순') {
         // 저가순 정렬
-        _filteredPassDetailInfo.sort((a, b) => a.price.compareTo(b.price));
+        _filteredPassDetailInfo.sort((a, b) => (double.parse((a.price).split(',')[0])).compareTo(double.parse((b.price).split(',')[0])));
       } else if (_sortBy == '고가순') {
         // 고가순 정렬
-        _filteredPassDetailInfo.sort((a, b) => b.price.compareTo(a.price));
+        _filteredPassDetailInfo.sort((a, b) => (double.parse((b.price).split(',')[0])).compareTo(double.parse((a.price).split(',')[0])));
       }
     });
   }
@@ -307,7 +329,7 @@ class _searchscreenState extends State<searchscreen> {
                       SearchParameters[0].quantityAdults = 0;
                       SearchParameters[0].quantityChildren = 0;
                       _performSearch(); // 엔터키를 누르면 검색 수행
-                      printing();
+                      //printing();
                     },
                   ),
                 ),
@@ -434,6 +456,7 @@ class _searchscreenState extends State<searchscreen> {
                               ),
                               iconSize: 25,
                               onPressed: () {
+                                if (_searchText == '') _searchText = '0';
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (context) => filterscreen(searchText: _searchText)),
@@ -489,7 +512,8 @@ class _searchscreenState extends State<searchscreen> {
                       itemBuilder: (context, index) {
                         int id = _filteredPassDetailInfo[index].passid;
                         String title = _filteredPassDetailInfo[index].title;
-                        String price = NumberFormat('#,###').format(_filteredPassDetailInfo[index].price);
+                        //String price = NumberFormat('#,###').format(_filteredPassDetailInfo[index].price);
+                        String price = (_filteredPassDetailInfo[index].price).split(',')[0];
                         String cityNames = _filteredPassDetailInfo[index].cityNames;
                         String imageURL = _filteredPassDetailInfo[index].imageURL;
 
@@ -501,8 +525,11 @@ class _searchscreenState extends State<searchscreen> {
                                   builder: (context) => passinfoscreen(passID: _filteredPassDetailInfo[index].passid),
                                 ),
                               ).then((value) {
+                                print(selectedValue);
                                 //_performSearch();
-                                initState();
+                                _getbookmark();
+                                //_handleSort(selectedValue.toString());
+                                //initState();
                               });
                             },
                             child: Padding(

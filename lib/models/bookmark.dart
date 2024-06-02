@@ -3,7 +3,7 @@ class Bookmark {
   final String imageURL;
   final String title;
   final String cityNames;
-  final double price;
+  final String price;
 
   Bookmark({
     required this.passid,
@@ -19,7 +19,7 @@ class Bookmark {
       imageURL: json['imageUrl'],
       title: json['title'],
       cityNames: json['cityNames'],
-      price: json['price'].toDouble(),
+      price: json['price'],
     );
   }
 }

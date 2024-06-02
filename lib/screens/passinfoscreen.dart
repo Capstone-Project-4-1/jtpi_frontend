@@ -21,15 +21,13 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<String> bookmarked = [];
 
-  Color _iconColor = Colors.blue;
-
   List<PassDetailInfo> passDetailInfo = [
     PassDetailInfo(
       passid: 0,
       transportType: '0',
       imageURL: '0',
       title: '0',
-      price: 0,
+      price: '0',
       cityNames: '0',
       productDescription: '0',
       period: 0,
@@ -131,6 +129,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
 
     });
     _passdetailinfo();
+    _getbookmark();
   }
 
   void _checkTabPosition() {
@@ -221,7 +220,8 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    String price = NumberFormat('#,###').format(passDetailInfo[0].price);
+    //String price = NumberFormat('#,###').format(passDetailInfo[0].price);
+    String price = (passDetailInfo[0].price);
 
     return Scaffold(
       body: Container(
@@ -414,7 +414,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                           children: [
                             SizedBox(width: 2),
                             Text(
-                              price + ' 원',
+                              price.split(',')[0] + ' 원',
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontSize: 18, // 텍스트 크기 조정

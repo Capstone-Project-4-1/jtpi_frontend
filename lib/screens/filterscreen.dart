@@ -36,6 +36,8 @@ class _filterscreenState extends State<filterscreen> {
         transportType: '0',
         cityNames: '0',
         period: 0,
+        minPrice: 0,
+        maxPrice: 0,
         quantityAdults: 0,
         quantityChildren: 0
     )
@@ -58,6 +60,8 @@ class _filterscreenState extends State<filterscreen> {
     SearchParameters[0].transportType = '0';
     SearchParameters[0].cityNames = '0';
     SearchParameters[0].period = 0;
+    SearchParameters[0].minPrice = 0;
+    SearchParameters[0].maxPrice =0;
     SearchParameters[0].quantityAdults = 0;
     SearchParameters[0].quantityChildren = 0;
 
@@ -98,9 +102,19 @@ class _filterscreenState extends State<filterscreen> {
             SearchParameters[0].transportType = '0';
             SearchParameters[0].cityNames = '0';
             SearchParameters[0].period = 0;
+            SearchParameters[0].minPrice = 0;
+            SearchParameters[0].maxPrice =0;
             SearchParameters[0].quantityAdults = 0;
             SearchParameters[0].quantityChildren = 0;
-            Navigator.pop(context);
+            if(SearchParameters[0].query == '') {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) =>
+                    searchscreen(searchparameter: SearchParameters[0], screennumber: 2,)),
+              );
+            }
           },
         ),
         title: Center(
@@ -625,7 +639,8 @@ class _filterscreenState extends State<filterscreen> {
                                   if(double.parse(text) >= double.parse(maxpriceController.text)) {
                                     minpriceController.text = maxpriceController.text;
                                     text = maxpriceController.text; }
-                                  _lowerValue = double.parse(text); // 도착지 입력값을 SearchParameters에 저장
+                                  _lowerValue = double.parse(text);
+                                  SearchParameters[0].minPrice = _lowerValue.toInt();
                                 });
                               },
                               textAlign: TextAlign.right,
@@ -666,7 +681,8 @@ class _filterscreenState extends State<filterscreen> {
                                   if(double.parse(text) <= double.parse(minpriceController.text)) {
                                     maxpriceController.text = minpriceController.text;
                                     text = minpriceController.text; }
-                                  _upperValue = double.parse(text); // 도착지 입력값을 SearchParameters에 저장
+                                  _upperValue = double.parse(text);
+                                  SearchParameters[0].maxPrice = _upperValue.toInt();
                                 });
                               },
                               textAlign: TextAlign.right,
@@ -738,6 +754,8 @@ class _filterscreenState extends State<filterscreen> {
                         _upperValue = upperValue;
                         minpriceController.text = lowerValue.toInt().toString();
                         maxpriceController.text = upperValue.toInt().toString();
+                        SearchParameters[0].minPrice = _lowerValue.toInt();
+                        SearchParameters[0].maxPrice = _upperValue.toInt();
                       });
                     },
                   )),
@@ -972,12 +990,14 @@ class _filterscreenState extends State<filterscreen> {
               print('transportType: ${SearchParameters[0].transportType}');
               print('cityNames: ${SearchParameters[0].cityNames}');
               print('period: ${SearchParameters[0].period}');
+              print('minPrice: ${SearchParameters[0].minPrice}');
+              print('maxPrice: ${SearchParameters[0].maxPrice}');
               print('quantityAdults: ${SearchParameters[0].quantityAdults}');
               print('quantityChildren: ${SearchParameters[0].quantityChildren}');
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) =>
-                    searchscreen(searchparameter: SearchParameters[0])),
+                    searchscreen(searchparameter: SearchParameters[0], screennumber: 2,)),
               );
             }
           },

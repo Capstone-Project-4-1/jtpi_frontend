@@ -33,6 +33,8 @@ class _mainscreenState extends State<mainscreen> {
         transportType: '0',
         cityNames: '0',
         period: 0,
+        minPrice: 0,
+        maxPrice: 0,
         quantityAdults: 0,
         quantityChildren: 0
     )
@@ -56,7 +58,7 @@ class _mainscreenState extends State<mainscreen> {
 
   ////
   Future<List<PassPreview>> _getpasses(String passtype) async {
-    final response = await http.get(Uri.parse('http://54.180.69.13:8080/passes/slideshow/new'));
+    final response = await http.get(Uri.parse('http://54.180.69.13:8080/passes/slideshow/' + passtype));
 
     try {
       if (response.statusCode == 200) {
@@ -97,7 +99,7 @@ class _mainscreenState extends State<mainscreen> {
         goToSearchScreen();
       }
     });
-    //getPasses();
+    getPasses();
     _getbookmark();
   }
 
@@ -116,7 +118,7 @@ class _mainscreenState extends State<mainscreen> {
     _searchparameter[0].query = searchT;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => searchscreen(searchparameter: _searchparameter[0])),
+      MaterialPageRoute(builder: (context) => searchscreen(searchparameter: _searchparameter[0], screennumber: 0,)),
     );
     /*Navigator.push(
       context,

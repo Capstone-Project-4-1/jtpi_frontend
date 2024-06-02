@@ -3,7 +3,7 @@ class PassDetailInfo{
   String transportType;
   String imageURL;
   String title;
-  double price;
+  String price;
   String cityNames;
   int period;
   String productDescription;
@@ -32,7 +32,7 @@ class PassDetailInfo{
       transportType: json['transportType'],
       title: json['title'],
       cityNames: json['cityNames'],
-      price: json['price'].toDouble(),
+      price: json['price'],
       period: json['period'],
       productDescription: json['productDescription'],
       benefit_information: json['benefit_information'],
