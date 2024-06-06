@@ -1,14 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jtpi/models/searchparameters.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:jtpi/models/passsearchresult.dart';
+import 'package:jtpi/models/cities.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
-
-
-
+import 'package:searchfield/searchfield.dart';
 import 'package:jtpi/screens/searchscreen.dart';
 
 class filterscreen extends StatefulWidget {
@@ -26,6 +23,8 @@ class _filterscreenState extends State<filterscreen> {
   TextEditingController maxpriceController = TextEditingController();
   double _lowerValue = 0.0;
   double _upperValue = 1600.0;
+  final focus = FocusNode();
+  final focus2 = FocusNode();
 
   //final List<SearchParameter> SearchParameters = searchparameters;
   List<SearchParameter> SearchParameters = [
@@ -144,6 +143,158 @@ class _filterscreenState extends State<filterscreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(0, 0, 0, 0.05),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: SearchField(
+                                onSearchTextChanged: (query) {
+                                  final filter = cityNames
+                                      .where((element) =>
+                                      element.toLowerCase().contains(query.toLowerCase()))
+                                      .toList();
+                                  if (filter.contains(query)) {print(query); }
+                                  return filter
+                                      .map((e) => SearchFieldListItem<String>(e,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 0),
+                                        child: Text(e,
+                                            style: TextStyle(fontSize: 13, color: Colors.blue)),
+                                      )))
+                                      .toList();
+                                },
+                                key: const Key('departureCity'),
+                                controller: departureController,
+                                hint: '출발역',
+                                itemHeight: 40,
+                                searchStyle: TextStyle(fontSize: 15, color: Colors.black),
+                                searchInputDecoration: InputDecoration(
+                                  hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.transparent),
+                                  ),
+                                ),
+                                suggestionsDecoration: SuggestionDecoration(
+                                    padding: const EdgeInsets.all(2),
+                                    border: Border.all(color: Colors.transparent),
+                                    borderRadius: BorderRadius.all(Radius.circular(12))),
+                                suggestions: cityNames
+                                    .map((e) => SearchFieldListItem<String>(e,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 0),
+                                      child: Text(e,
+                                          style: TextStyle(fontSize: 13, color: Colors.black)),
+                                    )))
+                                    .toList(),
+                                focusNode: focus,
+                                suggestionState: Suggestion.expand,
+                                onSuggestionTap: (SearchFieldListItem<String> x) {
+                                  SearchParameters[0].departureCity = x.searchKey;
+                                  focus.unfocus();
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 4), // 출발지 입력 후 공간 추가
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(0, 0, 0, 0.05),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: SearchField(
+                                onSearchTextChanged: (query) {
+                                  final filter = cityNames
+                                      .where((element) =>
+                                      element.toLowerCase().contains(query.toLowerCase()))
+                                      .toList();
+                                  if (filter.contains(query)) {print(query); }
+                                  return filter
+                                      .map((e) => SearchFieldListItem<String>(e,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 0),
+                                        child: Text(e,
+                                            style: TextStyle(fontSize: 13, color: Colors.blue)),
+                                      )))
+                                      .toList();
+                                },
+                                key: const Key('arrivalCity'),
+                                controller: arrivalController,
+                                hint: '도착역',
+                                itemHeight: 40,
+                                searchStyle: TextStyle(fontSize: 15, color: Colors.black),
+                                searchInputDecoration: InputDecoration(
+                                  hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.transparent),
+                                  ),
+                                ),
+                                suggestionsDecoration: SuggestionDecoration(
+                                    padding: const EdgeInsets.all(2),
+                                    border: Border.all(color: Colors.transparent),
+                                    borderRadius: BorderRadius.all(Radius.circular(12))),
+                                suggestions: cityNames
+                                    .map((e) => SearchFieldListItem<String>(e,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 0),
+                                      child: Text(e,
+                                          style: TextStyle(fontSize: 13, color: Colors.black)),
+                                    )))
+                                    .toList(),
+                                focusNode: focus2,
+                                suggestionState: Suggestion.expand,
+                                onSuggestionTap: (SearchFieldListItem<String> x) {
+                                  SearchParameters[0].arrivalCity = x.searchKey;
+                                  focus2.unfocus();
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.swap_vert_sharp,
+                              color: Colors.grey.shade800,
+                            ),
+                            iconSize: 24,
+                            padding: EdgeInsets.zero,
+                            onPressed: swapText,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height:50),
                   SizedBox(height: 10),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -165,7 +316,7 @@ class _filterscreenState extends State<filterscreen> {
                                   },
                                   style: TextStyle(fontSize: 15, color: Colors.black),
                                   decoration: InputDecoration(
-                                    hintText: "출발지 입력",
+                                    hintText: "출발역 입력",
                                     hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
                                     prefix: SizedBox(width: 12,),
                                     filled: true,
@@ -425,8 +576,7 @@ class _filterscreenState extends State<filterscreen> {
                           ),
                         ],
                       ),
-                      items: <String>['도쿄']
-                          .map((String item) => DropdownMenuItem<String>(
+                      items: cityNames.map((String item) => DropdownMenuItem<String>(
                         value: item,
                         child: Text(
                           item,
@@ -690,7 +840,7 @@ class _filterscreenState extends State<filterscreen> {
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(10),
                                 suffixIcon: Container(
-                                  child: Text('원', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey.shade800),),
+                                  child: Text('엔', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey.shade800),),
                                 ),
                                 suffixIconConstraints: BoxConstraints(minWidth: 22),
                                 filled: true,
@@ -711,54 +861,54 @@ class _filterscreenState extends State<filterscreen> {
                     ],
                   ),
                   SizedBox(height: 12),
-              Container(
-                margin: EdgeInsets.only(left: 2.5, right: 1.2),
-                child: FlutterSlider(
-                    values: [_lowerValue, _upperValue],
-                    min: 0,
-                    max: 1600,
-                    touchSize: 5,
-                    step: FlutterSliderStep(step: 10),
-                    rangeSlider: true,
-                  tooltip: FlutterSliderTooltip(
-                    disabled: true,
-                  ),
-                    trackBar: FlutterSliderTrackBar(
-                      //activeTrackBarHeight: 5,
-                      activeTrackBar: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.5)),
-                    ),
-                    handlerWidth: 25,
-                    handler: FlutterSliderHandler(
-                      /*decoration: BoxDecoration(
+                  Container(
+                      margin: EdgeInsets.only(left: 2.5, right: 1.2),
+                      child: FlutterSlider(
+                        values: [_lowerValue, _upperValue],
+                        min: 0,
+                        max: 1600,
+                        touchSize: 5,
+                        step: FlutterSliderStep(step: 10),
+                        rangeSlider: true,
+                        tooltip: FlutterSliderTooltip(
+                          disabled: true,
+                        ),
+                        trackBar: FlutterSliderTrackBar(
+                          //activeTrackBarHeight: 5,
+                          activeTrackBar: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.5)),
+                        ),
+                        handlerWidth: 25,
+                        handler: FlutterSliderHandler(
+                          /*decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.blue, width: 1),
                       ),*/
-                      child: Icon(Icons.circle, color: Colors.transparent),
-                    ),
-                    rightHandler: FlutterSliderHandler(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.blue, width: 1),
-                      ),
-                      child: Icon(Icons.circle, color: Colors.transparent),
-                    ),
-                    handlerAnimation: FlutterSliderHandlerAnimation(
-                        duration: Duration(milliseconds: 700),
-                        scale: 1.1),
-                    onDragging: (handlerIndex, lowerValue, upperValue) {
-                      setState(() {
-                        _lowerValue = lowerValue;
-                        _upperValue = upperValue;
-                        minpriceController.text = lowerValue.toInt().toString();
-                        maxpriceController.text = upperValue.toInt().toString();
-                        SearchParameters[0].minPrice = _lowerValue.toInt();
-                        SearchParameters[0].maxPrice = _upperValue.toInt();
-                      });
-                    },
-                  )),
+                          child: Icon(Icons.circle, color: Colors.transparent),
+                        ),
+                        rightHandler: FlutterSliderHandler(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.blue, width: 1),
+                          ),
+                          child: Icon(Icons.circle, color: Colors.transparent),
+                        ),
+                        handlerAnimation: FlutterSliderHandlerAnimation(
+                            duration: Duration(milliseconds: 700),
+                            scale: 1.1),
+                        onDragging: (handlerIndex, lowerValue, upperValue) {
+                          setState(() {
+                            _lowerValue = lowerValue;
+                            _upperValue = upperValue;
+                            minpriceController.text = lowerValue.toInt().toString();
+                            maxpriceController.text = upperValue.toInt().toString();
+                            SearchParameters[0].minPrice = _lowerValue.toInt();
+                            SearchParameters[0].maxPrice = _upperValue.toInt();
+                          });
+                        },
+                      )),
                   SizedBox(height: 60), // 위쪽 여백 추가
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -318,6 +318,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                     icon: Icon(
                       bookmarked.contains(widget.passID.toString()) ? Icons.star : Icons.star_border,
                       color: bookmarked.contains(widget.passID.toString()) ? Colors.amber : Colors.white,
+                      shadows: <Shadow>[Shadow(color: Color.fromRGBO(0, 0, 0, 0.6), blurRadius: 5.0)],
                     ),
                     iconSize: 40,
                     onPressed: () {
@@ -414,7 +415,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                           children: [
                             SizedBox(width: 2),
                             Text(
-                              price.split(',')[0] + ' 원',
+                              price.split(',')[0] + ' 엔',
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontSize: 18, // 텍스트 크기 조정

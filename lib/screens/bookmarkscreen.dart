@@ -385,7 +385,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                             ),
                                             SizedBox(height: 2),
                                             Text(
-                                              price.split(',')[0] + ' 원',
+                                              price.split(',')[0] + ' 엔',
                                               softWrap: true,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,

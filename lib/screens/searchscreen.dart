@@ -59,23 +59,13 @@ class _searchscreenState extends State<searchscreen> {
   ];
 
   Future<List<PassSearchResult>> _search(String searchText) async {
-    /*Map<String, dynamic> searchParams = {
-      'query': searchText,
+    Map<String, dynamic> searchParams = {
+      'searchQuery': searchText,
       'departureCity': SearchParameters[0].departureCity,
       'arrivalCity': SearchParameters[0].arrivalCity,
       'transportType': SearchParameters[0].transportType,
       'cityNames': SearchParameters[0].cityNames,
       'duration': SearchParameters[0].period,
-      'minPrice': 0,
-      'maxPrice': 0,
-    };*/
-    Map<String, dynamic> searchParams = {
-      'query': '이와테 홀리데이 패스',
-      'departureCity': '0',
-      'arrivalCity': '0',
-      'transportType': '0',
-      'cityNames': '0',
-      'duration': '0',
       'minPrice': 0,
       'maxPrice': 0,
     };
@@ -158,7 +148,7 @@ class _searchscreenState extends State<searchscreen> {
   }
 
   void printing() {
-    print('query: ${SearchParameters[0].query}');
+    print('searchQuery: ${SearchParameters[0].query}');
     print('departureCity: ${SearchParameters[0].departureCity}');
     print('arrivalCity: ${SearchParameters[0].arrivalCity}');
     print('transportType: ${SearchParameters[0].transportType}');
@@ -528,7 +518,7 @@ class _searchscreenState extends State<searchscreen> {
                                 print(selectedValue);
                                 //_performSearch();
                                 _getbookmark();
-                                //_handleSort(selectedValue.toString());
+                                _handleSort(selectedValue.toString());
                                 //initState();
                               });
                             },
@@ -620,7 +610,7 @@ class _searchscreenState extends State<searchscreen> {
                                               ),
                                               SizedBox(height: 2),
                                               Text(
-                                                price + ' 원',
+                                                price + ' 엔',
                                                 softWrap: true,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,

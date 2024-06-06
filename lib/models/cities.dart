@@ -1,0 +1,1 @@
+List<String> cityNames = ['도쿄','긴자'];
