@@ -250,7 +250,33 @@ class _searchscreenState extends State<searchscreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: myTabs.length,
-      child: Scaffold(
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) {
+      SearchParameters[0].departureCity = '0';
+      SearchParameters[0].arrivalCity = '0';
+      SearchParameters[0].transportType = '0';
+      SearchParameters[0].cityNames = '0';
+      SearchParameters[0].period = 0;
+      SearchParameters[0].minPrice = 0;
+      SearchParameters[0].maxPrice =0;
+      SearchParameters[0].quantityAdults = 0;
+      SearchParameters[0].quantityChildren = 0;
+      if(SearchParameters[0].query == '') {
+        Navigator.pop(context);
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen(initialTabIndex: 0,)),
+        );
+      }
+      print('뒤로가기');
+      if (didPop) {
+        print('didPop호출');
+        return;
+      }
+    },
+    child: Scaffold(
           backgroundColor: Color.fromRGBO(254, 254, 254, 1.0),
           appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -454,7 +480,7 @@ class _searchscreenState extends State<searchscreen> {
                                 if (_searchText == '') _searchText = '0';
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => filterscreen(searchText: _searchText)),
+                                  MaterialPageRoute(builder: (context) => filterscreen(searchText: _searchText, screennumber: 1,)),
                                 );
                               },
                             ),
@@ -667,6 +693,7 @@ class _searchscreenState extends State<searchscreen> {
               ),*/
             ],
           )
+      )
       ),
     );
   }

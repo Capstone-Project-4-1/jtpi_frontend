@@ -150,7 +150,7 @@ class _mainscreenState extends State<mainscreen> {
                   children: [
                     Container(
                       width: 60,
-                      height: 60,
+                      height: 56,
                       child: Image.asset('assets/logo1.png'),
                     ),
                     const SizedBox(width: 8),
@@ -158,7 +158,7 @@ class _mainscreenState extends State<mainscreen> {
                       height: 48,
                       child: Image.asset('assets/logo2.png'),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 6),
                   ],
                 ),
               ],
@@ -168,7 +168,7 @@ class _mainscreenState extends State<mainscreen> {
             color: Color.fromRGBO(253, 253, 254, 1.0), // 배경색 설정
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(15.0, 25.0, 15.0, 16.0),
+                padding: const EdgeInsets.fromLTRB(15.0, 25.0, 15.0, 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -257,7 +257,7 @@ class _mainscreenState extends State<mainscreen> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => filterscreen(searchText: '')),
+                                      MaterialPageRoute(builder: (context) => filterscreen(searchText: '', screennumber: 0,)),
                                     );
                                   },
                                   style: TextButton.styleFrom(
@@ -406,8 +406,9 @@ class _mainscreenState extends State<mainscreen> {
                                   Text(' 신규 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                                 ],
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 8),
                               Container(
+                                color: Colors.black,
                                 height: 120,
                                 child: PageView.builder(
                                   itemCount: newpasslist.length,
@@ -549,7 +550,7 @@ class _mainscreenState extends State<mainscreen> {
                                   },
                                 ),
                               ),
-                              SizedBox(height: 30),
+                              SizedBox(height: 25),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -559,8 +560,9 @@ class _mainscreenState extends State<mainscreen> {
                                   Text(' JTPI 추천 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                                 ],
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 8),
                               Container(
+                                color: Colors.black,
                                 height: 120,
                                 child: PageView.builder(
                                   itemCount: recommendpasslist.length,

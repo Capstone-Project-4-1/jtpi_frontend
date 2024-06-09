@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:jtpi/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jtpi/models/searchparameters.dart';
@@ -9,9 +10,10 @@ import 'package:searchfield/searchfield.dart';
 import 'package:jtpi/screens/searchscreen.dart';
 
 class filterscreen extends StatefulWidget {
+  final int screennumber;
   final String searchText;
 
-  filterscreen({required this.searchText});
+  filterscreen({required this.searchText, required this.screennumber});
 
 
   @override
@@ -84,12 +86,29 @@ class _filterscreenState extends State<filterscreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: false,
         onPopInvoked: (bool didPop) {
-          print('뒤로가기');
-      if (didPop) {
-        print('didPop호출');
-        return;
-      }
+          SearchParameters[0].departureCity = '0';
+          SearchParameters[0].arrivalCity = '0';
+          SearchParameters[0].transportType = '0';
+          SearchParameters[0].cityNames = '0';
+          SearchParameters[0].period = 0;
+          SearchParameters[0].minPrice = 0;
+          SearchParameters[0].maxPrice =0;
+          SearchParameters[0].quantityAdults = 0;
+          SearchParameters[0].quantityChildren = 0;
+          if (widget.screennumber == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) =>
+                  searchscreen(searchparameter: SearchParameters[0], screennumber: 2,)),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen(initialTabIndex: 0,)),
+            );
+          }
     },
     child: Scaffold(
       appBar: AppBar(
@@ -113,13 +132,17 @@ class _filterscreenState extends State<filterscreen> {
             SearchParameters[0].maxPrice =0;
             SearchParameters[0].quantityAdults = 0;
             SearchParameters[0].quantityChildren = 0;
-            if(SearchParameters[0].query == '') {
-              Navigator.pop(context);
-            } else {
+
+            if (widget.screennumber == 2) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) =>
                     searchscreen(searchparameter: SearchParameters[0], screennumber: 2,)),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen(initialTabIndex: 0,)),
               );
             }
           },
@@ -294,7 +317,7 @@ class _filterscreenState extends State<filterscreen> {
                               Icons.swap_vert_sharp,
                               color: Colors.grey.shade800,
                             ),
-                            iconSize: 24,
+                            iconSize: 28,
                             padding: EdgeInsets.zero,
                             onPressed: swapText,
                           )
@@ -864,207 +887,6 @@ class _filterscreenState extends State<filterscreen> {
 
                   SizedBox(height: 80), // 위쪽 여백 추가
 
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '수량',
-                        style: TextStyle(
-                          letterSpacing: -0.5,
-                          fontSize: 18, // 텍스트 크기 조정
-                          fontWeight: FontWeight.w800, // 굵은 글꼴로 설정
-                          color: Color.fromRGBO(0, 51, 102, 1.0), // 텍스트 색상 설정
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '어른',
-                            style: TextStyle(
-                              letterSpacing: -0.5,
-                              fontSize: 15, // 텍스트 크기 조정
-                              fontWeight: FontWeight.w800, // 굵은 글꼴로 설정
-                            ),
-                          ),
-                          Text(
-                            '만 12세 이상',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 20),
-                      Row(
-                        children: [
-                          Container(
-                            width: 25,
-                            height: 25,
-                            child: IconButton(
-                              onPressed: (SearchParameters[0].quantityAdults > 0) ? () {
-                                setState(() {
-                                  if(SearchParameters[0].quantityAdults >0) {
-                                    SearchParameters[0].quantityAdults -= 1;
-                                  }
-                                });
-                              } : null,
-                              icon: Icon(Icons.remove_sharp),
-                              padding: EdgeInsets.zero,
-                              iconSize: 15,
-                              style: ButtonStyle(
-                                side: MaterialStateProperty.resolveWith<BorderSide>((states) {
-                                  return BorderSide(
-                                    color: (SearchParameters[0].quantityAdults >0) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
-                                    width: 0.8, // 테두리 두께
-                                  );
-                                }),
-                                foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                                  return (SearchParameters[0].quantityAdults >0) ? Colors.blueGrey.shade800 : Colors.grey.shade500;
-                                }),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 50,
-                            child: Center(child: Text(SearchParameters[0].quantityAdults.toString())),
-                          ),
-                          Container(
-                            width: 25,
-                            height: 25,
-                            child: IconButton(
-                              onPressed: (SearchParameters[0].quantityAdults < 10) ? () {
-                                setState(() {
-                                  if(SearchParameters[0].quantityAdults < 10) {
-                                    SearchParameters[0].quantityAdults += 1;
-                                  }
-                                });
-                              } : null,
-                              icon: Icon(Icons.add_sharp),
-                              padding: EdgeInsets.zero,
-                              iconSize: 15,
-                              style: ButtonStyle(
-                                side: MaterialStateProperty.resolveWith<BorderSide>((states) {
-                                  return BorderSide(
-                                    color: (SearchParameters[0].quantityAdults < 10) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
-                                    width: 0.8, // 테두리 두께
-                                  );
-                                }),
-                                foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                                  return (SearchParameters[0].quantityAdults < 10) ? Colors.blueGrey.shade800 : Colors.grey.shade500;
-                                }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '어린이',
-                            style: TextStyle(
-                              letterSpacing: -0.5,
-                              fontSize: 15, // 텍스트 크기 조정
-                              fontWeight: FontWeight.w800, // 굵은 글꼴로 설정
-                            ),
-                          ),
-                          Text(
-                            '만 12세 미만',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 20),
-                      Row(
-                        children: [
-                          Container(
-                            width: 25,
-                            height: 25,
-                            child: IconButton(
-                              onPressed: (SearchParameters[0].quantityChildren > 0) ? () {
-                                setState(() {
-                                  if(SearchParameters[0].quantityChildren >0) {
-                                    SearchParameters[0].quantityChildren -= 1;
-                                  }
-                                });
-                              } : null,
-                              icon: Icon(Icons.remove_sharp),
-                              padding: EdgeInsets.zero,
-                              iconSize: 15,
-                              style: ButtonStyle(
-                                side: MaterialStateProperty.resolveWith<BorderSide>((states) {
-                                  return BorderSide(
-                                    color: (SearchParameters[0].quantityChildren >0) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
-                                    width: 0.8, // 테두리 두께
-                                  );
-                                }),
-                                foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                                  return (SearchParameters[0].quantityChildren >0) ? Colors.blueGrey.shade800 : Colors.grey.shade500;
-                                }),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 50,
-                            child: Center(child: Text(SearchParameters[0].quantityChildren.toString())),
-                          ),
-                          Container(
-                            width: 25,
-                            height: 25,
-                            child: IconButton(
-                              onPressed: (SearchParameters[0].quantityChildren < 10) ? () {
-                                setState(() {
-                                  if(SearchParameters[0].quantityChildren < 10) {
-                                    SearchParameters[0].quantityChildren += 1;
-                                  }
-                                });
-                              } : null,
-                              icon: Icon(Icons.add_sharp),
-                              padding: EdgeInsets.zero,
-                              iconSize: 15,
-                              style: ButtonStyle(
-                                side: MaterialStateProperty.resolveWith<BorderSide>((states) {
-                                  return BorderSide(
-                                    color: (SearchParameters[0].quantityChildren < 10) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
-                                    width: 0.8, // 테두리 두께
-                                  );
-                                }),
-                                foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                                  return (SearchParameters[0].quantityChildren < 10) ? Colors.blueGrey.shade800 : Colors.grey.shade500;
-                                }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 50),
-                  Text('출발지: ' + SearchParameters[0].departureCity),
-                  Text('도착지: ' + SearchParameters[0].arrivalCity),
-                  Text('교통수단: ' + SearchParameters[0].transportType),
-                  Text('지역: ' + SearchParameters[0].cityNames),
-                  Text('사용일수: ' + SearchParameters[0].period.toString()),
-                  Text('어른: ' + SearchParameters[0].quantityAdults.toString()),
-                  Text('어린이: ' + SearchParameters[0].quantityChildren.toString()),
-                  SizedBox(height: 50),
                 ],
               ),
             ),
