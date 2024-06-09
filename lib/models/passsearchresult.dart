@@ -2,14 +2,14 @@ class PassSearchResult {
   final int passid;
   final String imageURL;
   final String title;
-  final String cityNames;
+  final String routeInformation;
   final String price;
 
   PassSearchResult({
     required this.passid,
     required this.imageURL,
     required this.title,
-    required this.cityNames,
+    required this.routeInformation,
     required this.price,
   });
 
@@ -18,7 +18,7 @@ class PassSearchResult {
       passid: json['passID'],
       imageURL: json['imageUrl'],
       title: json['title'],
-      cityNames: json['cityNames'],
+      routeInformation: json['routeInformation'],
       price: json['price'],
     );
   }

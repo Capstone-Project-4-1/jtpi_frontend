@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jtpi/models/bookmark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:expandable/expandable.dart';
 
 class passinfoscreen extends StatefulWidget {
   final int passID;
@@ -25,27 +26,38 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
     PassDetailInfo(
       passid: 0,
       transportType: '0',
-      imageURL: '0',
-      title: '0',
-      price: '0',
-      cityNames: '0',
-      productDescription: '0',
+      imageURL: '',
+      title: 'TITLE',
+      routeInformation: '도쿄',
+      price: '2000,1000',
+      Map_Url: "0",
+      break_even_usage: '0회 이상 이용시 본전 ! 0회 이상 이용시 ! 0회 이상 이용시 !',
+      stationNames: '도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄',
+      description_information: '상품설명상품설명상품설명상품설명상품설명상품설명상품설명상품설명',
       period: 0,
-      benefit_information: '0',
-      reservation_information: '0',
-      refund_information: '0',
+      benefit_information: '혜택 정보가 없습니다.',
+      reservation_information: '예매 정보가 없습니다.',
+      refund_information: '환불 정보가 없습니다.',
     ),
   ];
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
   bool _showTabBar = false;
   Color _titleColor = Colors.white;
+  Color _shadowColor = Colors.grey.shade700;
+  double screenHeight = 0.0;
+  double screenWidth = 150.0;
 
   final GlobalKey _rootKey = GlobalKey();
   final GlobalKey _descriptionKey = GlobalKey();
   final GlobalKey _benefitKey = GlobalKey();
   final GlobalKey _reservationKey = GlobalKey();
   final GlobalKey _refundKey = GlobalKey();
+
+  var _descriptionPosition = 0.0;
+  var _benefitPosition = 0.0;
+  var _reservationPosition = 0.0;
+  var _refundPosition = 0.0;
 
   ////
   Future<List<PassDetailInfo>> passdetailinfo(String id) async {
@@ -77,10 +89,14 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
       List<PassDetailInfo> results = await passdetailinfo(_passid);
 
       setState(() {
+        print('A');
         passDetailInfo = results;
+        _scrollToIndex(6);
+        print(passDetailInfo[0].Map_Url);
       });
     } catch (e) {
       print('Error: $e');
+      _scrollToIndex(6);
     }
   }
 ////
@@ -110,50 +126,69 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      screenHeight = MediaQuery.of(context).size.height;
+      screenWidth = (MediaQuery.of(context).size.width - 40) * 0.4;
+      print("Screen height: $screenHeight");
+
+      final renderBox = _descriptionKey.currentContext?.findRenderObject() as RenderBox;
+      _descriptionPosition = renderBox.localToGlobal(Offset.zero).dy - 104.0;
+
+      final renderBox2 = _benefitKey.currentContext?.findRenderObject() as RenderBox;
+      _benefitPosition = renderBox2.localToGlobal(Offset.zero).dy - 104.0;
+
+      final renderBox3 = _reservationKey.currentContext?.findRenderObject() as RenderBox;
+      _reservationPosition = renderBox3.localToGlobal(Offset.zero).dy - 104.0;
+
+      final renderBox4 = _refundKey.currentContext?.findRenderObject() as RenderBox;
+      _refundPosition = renderBox4.localToGlobal(Offset.zero).dy - 104.0;
+
+      _refundPosition = (_reservationPosition + _refundPosition) / 2.0;
+      _reservationPosition = (_benefitPosition + _reservationPosition) / 2.0;
+      _benefitPosition = (_descriptionPosition + _benefitPosition) / 2.0;
+    });
+
+
     _scrollController.addListener(() {
       final scrollPosition = _scrollController.position.pixels;
-      if (scrollPosition > 200 && !_showTabBar) {
+
+      if (scrollPosition > 190 && !_showTabBar) {
         setState(() {
           _showTabBar = true;
         });
-      } else if (scrollPosition <= 200 && _showTabBar) {
+      } else if (scrollPosition <= 190 && _showTabBar) {
         setState(() {
           _showTabBar = false;
         });
       }
 
+      if (scrollPosition < _benefitPosition) {
+        setState(() {
+          _tabController.index = 0;
+        });
+      } else if (scrollPosition >= _benefitPosition && scrollPosition < _reservationPosition) {
+        setState(() {
+          _tabController.index = 1;
+        });
+      } else if (scrollPosition >= _reservationPosition && scrollPosition < _refundPosition) {
+        setState(() {
+          _tabController.index = 2;
+        });
+      } else setState(() {
+        _tabController.index = 3;
+      });
+
       final newColorValue = (scrollPosition / 200).clamp(0.0, 1.0);
       setState(() {
-        _titleColor = Color.lerp(Colors.white, Colors.black, newColorValue)!;
+        _titleColor = Color.lerp(Colors.white, Color.fromRGBO(100, 100, 100, 1.0), newColorValue)!;
+        _shadowColor = Color.lerp(Colors.grey.shade700, Colors.white, newColorValue)!;
       });
 
     });
+
     _passdetailinfo();
     _getbookmark();
-  }
-
-  void _checkTabPosition() {
-    final benefitBox = _benefitKey.currentContext?.findRenderObject() as RenderBox?;
-    final reservationBox = _reservationKey.currentContext?.findRenderObject() as RenderBox?;
-    final refundBox = _refundKey.currentContext?.findRenderObject() as RenderBox?;
-    double pk = refundBox?.localToGlobal(Offset.zero, ancestor: _rootKey.currentContext!.findRenderObject())?.dy ?? double.infinity;
-
-
-    final benefitPosition = benefitBox?.localToGlobal(Offset.zero, ancestor: _rootKey.currentContext!.findRenderObject())?.dy ?? double.infinity;
-    final reservationPosition = reservationBox?.localToGlobal(Offset.zero, ancestor: _rootKey.currentContext!.findRenderObject())?.dy ?? double.infinity;
-    final refundPosition = refundBox?.localToGlobal(Offset.zero, ancestor: _rootKey.currentContext!.findRenderObject())?.dy ?? double.infinity;
-
-    final scrollPosition = _scrollController.position.pixels;
-
-    if (scrollPosition >= pk) {
-      _tabController.animateTo(2);
-    }else if (scrollPosition >= refundPosition) {
-      _tabController.animateTo(1);
-    } else if (scrollPosition >= reservationPosition) {
-      _tabController.animateTo(0);
-    } else if (scrollPosition >= benefitPosition ) {
-      _tabController.animateTo(0);
-    }
   }
 
   void _scrollToIndex(int index) {
@@ -208,9 +243,25 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
           curve: Curves.easeInOut,
         );
         break;
-      default:
+      case 4:
+        _scrollController.animateTo(
+          MediaQuery.of(context).size.height,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        break;
+      case 5:
         _scrollController.animateTo(
           0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        break;
+      default:
+        print('Q');
+        print(passDetailInfo[0].Map_Url);
+        _scrollController.animateTo(
+          1,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
@@ -218,10 +269,31 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
     }
   }
 
+  int _imageExist = 1;
+  imageExpanded() {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+      ),
+      child: Image.network(
+        passDetailInfo[0].Map_Url,
+        fit: BoxFit.cover,
+        width: double.infinity, // 가로 너비를 컨테이너에 맞게 설정
+        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+          _imageExist = 0;
+          return Container(height: screenWidth,
+              child:Center(child:Text('No Image', style: TextStyle(fontSize: 20),))
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //String price = NumberFormat('#,###').format(passDetailInfo[0].price);
-    String price = (passDetailInfo[0].price);
+    String priceAdult = NumberFormat('#,###').format(double.parse((passDetailInfo[0].price).split(',')[0]));
+    String priceChild = NumberFormat('#,###').format(double.parse((passDetailInfo[0].price).split(',')[1]));
 
     return Scaffold(
       body: Container(
@@ -242,10 +314,11 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                       child: IconButton(
                         padding: EdgeInsets.zero, // 패딩 설정
                         constraints: BoxConstraints(),
+                        iconSize: 20,
                         icon: Icon(
                           Icons.arrow_back_ios_new,
                           color: _titleColor,
-                          shadows: <Shadow>[Shadow(color: Color.fromRGBO(0, 0, 0, 0.6), blurRadius: 5.0)],
+                          shadows: <Shadow>[Shadow(color: _shadowColor, blurRadius: 2.0)],
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -257,16 +330,27 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
               pinned: true,
               expandedHeight: 200.0,
               flexibleSpace: FlexibleSpaceBar(
-                background: Image.network(
+                background: Stack(
+                  children: [
+                    Image.network(
                   passDetailInfo[0].imageURL,
                   fit: BoxFit.cover,
                   errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                    return Image.asset(
+                    return Container(
+                      padding: EdgeInsets.all(10),
+                        child: Image.asset(
                       'assets/logo3.png',
+                      width: double.infinity,
                       fit: BoxFit.cover,
+                    )
                     );
                   },
                 ),
+                    Container(
+                      color: Colors.grey.withOpacity(0.1), // 회색 반투명 레이어
+                    ),
+                    ]
+                )
               ),
               bottom: _showTabBar
                   ? TabBar(
@@ -310,28 +394,28 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                   : null,
               actions: [
                 Column(
-                  children: [
-                    SizedBox(height: 10,),
-                    Container(
-                  height: 45,
-                  child: IconButton(
-                    icon: Icon(
-                      bookmarked.contains(widget.passID.toString()) ? Icons.star : Icons.star_border,
-                      color: bookmarked.contains(widget.passID.toString()) ? Colors.amber : Colors.white,
-                      shadows: <Shadow>[Shadow(color: Color.fromRGBO(0, 0, 0, 0.6), blurRadius: 5.0)],
-                    ),
-                    iconSize: 40,
-                    onPressed: () {
-                      setState(() {
-                        if (bookmarked.contains(widget.passID.toString())) {
-                          _removebookmark(widget.passID.toString());
-                        } else {
-                          _addbookmark(widget.passID.toString());
-                        }
-                      });
-                    },
-                  ),
-                )
+                    children: [
+                      SizedBox(height: 10,),
+                      Container(
+                        height: 22,
+                        child: IconButton(
+                          icon: Icon(
+                            bookmarked.contains(widget.passID.toString()) ? Icons.star : Icons.star_border_sharp,
+                            color: bookmarked.contains(widget.passID.toString()) ? Colors.amber : _titleColor,
+                            shadows: <Shadow>[Shadow(color: _shadowColor, blurRadius: 2.0)],
+                          ),
+                          iconSize: 28,
+                          onPressed: () {
+                            setState(() {
+                              if (bookmarked.contains(widget.passID.toString())) {
+                                _removebookmark(widget.passID.toString());
+                              } else {
+                                _addbookmark(widget.passID.toString());
+                              }
+                            });
+                          },
+                        ),
+                      )
                     ]
                 )
               ],
@@ -400,12 +484,19 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               size: 22,
                             ),
                             SizedBox(width: 5),
-                            Text(
-                              passDetailInfo[0].cityNames,
-                              style: TextStyle(
-                                letterSpacing: -0.8,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(0),
+                                child: Text(
+                                  passDetailInfo[0].routeInformation,
+                                  style: TextStyle(
+                                    letterSpacing: -0.8,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           ],
@@ -415,7 +506,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                           children: [
                             SizedBox(width: 2),
                             Text(
-                              price.split(',')[0] + ' 엔',
+                              priceAdult + ' 엔',
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontSize: 18, // 텍스트 크기 조정
@@ -430,16 +521,55 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                    child: Divider(height: 2, color: Colors.grey.shade300),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          height: 2,
-                          width: double.infinity,
-                          color: Colors.grey.shade300,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
+                                child: Icon(Icons.circle, size: 5,)),
+                            SizedBox(width: 8,),
+                            Text('어른 $priceAdult 엔 / 어린이 : $priceChild 엔',
+                              style: TextStyle(fontWeight: FontWeight.w500),),
+                          ],
                         ),
-                      ],
-                    ),
+                        SizedBox(height: 5),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
+                                child: Icon(Icons.circle, size: 5,)),
+                            SizedBox(width: 8,),
+                            Text('유효기간 ' + passDetailInfo[0].period.toString()+'일',
+                              style: TextStyle(fontWeight: FontWeight.w500),),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
+                              child: Icon(Icons.circle, size: 5,)),
+                            SizedBox(width: 8,),
+        Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(0),
+              child: Text(passDetailInfo[0].break_even_usage.toString(),
+                              style: TextStyle(fontWeight: FontWeight.w500),)
+            )
+        ),
+                          ],
+                        )
+                      ]
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
@@ -447,7 +577,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 10, key: _descriptionKey,),
-                        SizedBox(height: 19),
+                        SizedBox(height: 20),
                         Container(
                           child: Text('상품 설명',
                             style: TextStyle(
@@ -457,13 +587,139 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
+                        SizedBox(height: 15),
                         Container(
-                          height: 400,
-                          child: Text('${passDetailInfo[0].benefit_information}'),
+                          child: Text('${passDetailInfo[0].description_information}'),
+                        ),
+                        SizedBox(height: 20),
+                        Padding(padding: EdgeInsets.fromLTRB(25, 15, 25, 15),
+                          child: Column(
+                            children: [
+                              ExpandableNotifier(
+                                child: ScrollOnExpand(
+                                    scrollOnExpand: true,
+                                    scrollOnCollapse: false,
+                                    child: Builder(
+                                      builder: (context) {
+                                        var controller = ExpandableController.of(context, required: true)!;
+                                        return Stack(
+                                          children: [
+                                            InkWell(
+                                              onTap: () { controller.toggle(); },
+                                              child: controller.expanded ? imageExpanded() :
+                                              Container( height: screenWidth, child: imageExpanded(), ),
+                                            ),
+                                            _imageExist == 1 ?
+                                            Positioned(
+                                              top: 10,
+                                              right: 10,
+                                              child: Container(
+                                                height: 30, width: 30,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(4),
+                                                  //shape: BoxShape.circle,
+                                                  color: Color.fromRGBO(255,255,255,0.5),
+                                                  border: Border.all(
+                                                    color: Color.fromRGBO(100,100,100,0.8),
+                                                    width: 1.5, // 두께 5
+                                                  ),
+                                                ),
+                                                child: InkWell(
+                                                  onTap: () { controller.toggle(); },
+                                                  child: IconButton(
+                                                    padding: EdgeInsets.zero,
+                                                    onPressed: () { controller.toggle(); },
+                                                    icon: Icon(controller.expanded ? Icons.zoom_in_map_rounded : Icons.zoom_out_map_rounded),
+                                                    color: Color.fromRGBO(50, 50, 50, 1.0),
+                                                    iconSize: 25,
+                                                  ),
+                                                  splashColor: Colors.grey, // 터치 효과 색상 설정
+                                                ),
+
+                                              ),
+                                            ) : Container(),
+                                          ],
+                                        );
+                                      },
+                                    )
+                                ),
+                              ),
+                              Divider(height: 0, color: Colors.transparent,),
+                              ExpandableNotifier(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    ScrollOnExpand(
+                                      scrollOnExpand: true,
+                                      scrollOnCollapse: false,
+                                      child: Expandable(
+                                          collapsed: Container(color: Colors.transparent,),
+                                          expanded: Container(
+                                            padding: EdgeInsets.all(10),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  passDetailInfo[0].stationNames,
+                                                  softWrap: true,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Builder(
+                                        builder: (context) {
+                                          var controller = ExpandableController.of(context, required: true)!;
+                                          return InkWell(
+                                            onTap: () {
+                                              controller.toggle();
+                                            },
+                                            child: Container(
+                                              height: 45,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(0),
+                                                border: Border.all(
+                                                  //color: Color.fromRGBO(11, 136, 177, 0.5), // 연한 하늘색
+                                                  color: Color.fromRGBO(0, 51, 102, 0.5),
+                                                  width: 1, // 두께 5
+                                                ),
+                                              ),
+                                              padding: EdgeInsets.all(0),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    controller.expanded ? "모든 역 목록" : "모든 역 목록",
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Color.fromRGBO(0, 51, 102, 0.9),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                  Icon(
+                                                    controller.expanded ? Icons.expand_less : Icons.expand_more,
+                                                    color: Color.fromRGBO(0, 51, 102, 0.9),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
 
+                        SizedBox(height: 20),
                         SizedBox(height: 10, key: _benefitKey,),
-                        SizedBox(height: 19),
+                        SizedBox(height: 20),
                         Container(
                           child: Text('혜택',
                             style: TextStyle(
@@ -473,13 +729,14 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
+                        SizedBox(height: 15),
                         Container(
-                          height: 400,
                           child: Text('${passDetailInfo[0].benefit_information}'),
                         ),
 
+                        SizedBox(height: 20),
                         SizedBox(height: 10, key: _reservationKey,),
-                        SizedBox(height: 19),
+                        SizedBox(height: 20),
                         Container(
                           child: Text('예매',
                             style: TextStyle(
@@ -489,13 +746,14 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
+                        SizedBox(height: 15),
                         Container(
-                          height: 400,
                           child: Text('${passDetailInfo[0].reservation_information}'),
                         ),
 
+                        SizedBox(height: 20),
                         SizedBox(height: 10, key: _refundKey,),
-                        SizedBox(height: 19),
+                        SizedBox(height: 20),
                         Container(
                           child: Text('환불',
                             style: TextStyle(
@@ -505,14 +763,10 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
+                        SizedBox(height: 15),
                         Container(
-                          height: 400,
                           child: Text('${passDetailInfo[0].refund_information}'),
                         ),
-
-                        SizedBox(height: 20),
-                        Text('ID: ${passDetailInfo[0].passid}'),
-                        Text('Description: ${passDetailInfo[0].benefit_information}'),
                       ],
                     ),
                   ),
@@ -522,6 +776,30 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
           ],
         ),
       ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            heroTag: null,
+            elevation: 2,
+            backgroundColor: const Color.fromRGBO(255,255,255,1.0),
+            shape: CircleBorder(side: BorderSide(color: Color.fromRGBO(0,0,0,0.1), width: 1.0)),
+            onPressed: (){ _scrollToIndex(5); },
+            child: const Icon(Icons.arrow_upward_rounded, color: Color.fromRGBO(0, 51, 102, 1.0), size: 26),
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton.small(
+            heroTag: null,
+            elevation: 2,
+            backgroundColor: const Color.fromRGBO(255,255,255,1.0),
+            shape: CircleBorder(side: BorderSide(color: Color.fromRGBO(0,0,0,0.1), width: 1.0)),
+            onPressed: (){ _scrollToIndex(4); },
+            child: const Icon(Icons.arrow_downward_rounded, color: Color.fromRGBO(0, 51, 102, 1.0), size: 26),
+          ),
+          SizedBox(height: 25),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

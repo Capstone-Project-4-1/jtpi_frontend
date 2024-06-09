@@ -59,6 +59,7 @@ class _searchscreenState extends State<searchscreen> {
   ];
 
   Future<List<PassSearchResult>> _search(String searchText) async {
+    print('a');
     Map<String, dynamic> searchParams = {
       'searchQuery': searchText,
       'departureCity': SearchParameters[0].departureCity,
@@ -66,12 +67,13 @@ class _searchscreenState extends State<searchscreen> {
       'transportType': SearchParameters[0].transportType,
       'cityNames': SearchParameters[0].cityNames,
       'duration': SearchParameters[0].period,
-      'minPrice': 0,
-      'maxPrice': 0,
+      'minPrice': SearchParameters[0].minPrice == 0 ? 1 : SearchParameters[0].minPrice,
+      'maxPrice': SearchParameters[0].maxPrice,
     };
 
     List<PassSearchResult> allResults = [];
     try {
+      print('흐어어');
       print(jsonEncode(searchParams));
       final response = await http.post(
         Uri.parse('http://54.180.69.13:8080/passes/search'),
@@ -85,6 +87,7 @@ class _searchscreenState extends State<searchscreen> {
         List<dynamic> body = jsonDecode(utf8.decode(response.bodyBytes));
         List<PassSearchResult> results = body.map((dynamic item) => PassSearchResult.fromJson(item)).toList();
         allResults.addAll(results);
+        //print('gyeol..: ${response.body}');
       } else {
         throw Exception('Failed to load hello message: ${response.statusCode}');
       }
@@ -117,6 +120,7 @@ class _searchscreenState extends State<searchscreen> {
   @override
   void initState() {
     super.initState();
+    print('으악');
     _textEditingController = TextEditingController(text: widget.searchparameter.query);
     _focusNode = FocusNode();
     _focusNode.addListener(() {
@@ -141,14 +145,13 @@ class _searchscreenState extends State<searchscreen> {
     SearchParameters[0].quantityChildren = widget.searchparameter.quantityChildren;
 
     if (widget.searchparameter.query == '0') _searchText = '';
-
-      _performSearch(); // 초기 검색 수행
+    _performSearch(); // 초기 검색 수행
     _getbookmark();
     //printing();
   }
 
   void printing() {
-    print('searchQuery: ${SearchParameters[0].query}');
+/*    print('searchQuery: ${SearchParameters[0].query}');
     print('departureCity: ${SearchParameters[0].departureCity}');
     print('arrivalCity: ${SearchParameters[0].arrivalCity}');
     print('transportType: ${SearchParameters[0].transportType}');
@@ -157,7 +160,7 @@ class _searchscreenState extends State<searchscreen> {
     print('minPrice: ${SearchParameters[0].minPrice}');
     print('maxPrice: ${SearchParameters[0].maxPrice}');
     print('quantityAdults: ${SearchParameters[0].quantityAdults}');
-    print('quantityChildren: ${SearchParameters[0].quantityChildren}');
+    print('quantityChildren: ${SearchParameters[0].quantityChildren}');*/
   }
 
   @override
@@ -174,9 +177,11 @@ class _searchscreenState extends State<searchscreen> {
   }
 
   Future<void> _performSearch() async {
-    if (SearchParameters[0].query == '') SearchParameters[0].query = '0';
+    print('B');
+    if (SearchParameters[0].query == '') {SearchParameters[0].query = '0'; print('C');}
     printing();
-    if (_searchText.isNotEmpty) {
+    if (_searchText.isNotEmpty || widget.screennumber == 2) {
+      print('D');
       List<PassSearchResult> results = await _search(_searchText);
       setState(() {
         _filteredPassDetailInfo = results;
@@ -285,28 +290,28 @@ class _searchscreenState extends State<searchscreen> {
                   child: TextField(
                     controller: _textEditingController,
                     focusNode: _focusNode,
-                    style: TextStyle(fontSize: 17, color: Colors.black),
+                    style: TextStyle(fontSize: 16, color: Colors.black),
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(10, 10, 15, 10), // Text 위젯의 위치 조정
+                      contentPadding: EdgeInsets.fromLTRB(20, 10, 30, 10), // Text 위젯의 위치 조정
                       hintText: _isFocused ? '' : "교통패스를 검색해주세요.",
-                      hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
+                      hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
                       suffixIcon: Padding(
-                        padding: EdgeInsets.only(left: 8, right: 5), // 아이콘의 왼쪽 여백 설정
+                        padding: EdgeInsets.only(left: 8, right: 18, top: 2), // 아이콘의 왼쪽 여백 설정
                         child: Icon(
                           Icons.search,
-                          color: Color.fromRGBO(200, 200, 240, 1.0),
-                          size: 32,
-                        ),
+                          color: Color.fromRGBO(50,50,70, 0.8),
+                          size: 25,
+                        )
                       ),
                       filled: true,
                       fillColor: Colors.white,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(width: 2.2, color: Color.fromRGBO(0, 51, 120, 1.0)),
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.9)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(width: 2.2, color: Color.fromRGBO(0, 51, 120, 1.0)),
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.9)),
                       ),
                     ),
                     onSubmitted: (value) {
@@ -341,7 +346,7 @@ class _searchscreenState extends State<searchscreen> {
                 ),
               ],
             ),
-            child:               TabBar(tabs: myTabs, onTap: _handleTabSelection,),
+            child: TabBar(tabs: myTabs, onTap: _handleTabSelection,),
           ),
           body: Column(
             children: [
@@ -504,7 +509,7 @@ class _searchscreenState extends State<searchscreen> {
                         String title = _filteredPassDetailInfo[index].title;
                         //String price = NumberFormat('#,###').format(_filteredPassDetailInfo[index].price);
                         String price = (_filteredPassDetailInfo[index].price).split(',')[0];
-                        String cityNames = _filteredPassDetailInfo[index].cityNames;
+                        String cityNames = _filteredPassDetailInfo[index].routeInformation;
                         String imageURL = _filteredPassDetailInfo[index].imageURL;
 
                         return GestureDetector(
@@ -596,15 +601,20 @@ class _searchscreenState extends State<searchscreen> {
                                                   Icon(Icons.location_on,
                                                     color: Colors.blue.shade500, size: 14,),
                                                   SizedBox(width: 3,),
-                                                  Text(cityNames,
-                                                    softWrap: true,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      letterSpacing: -0.8,
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
+                                                  Expanded(
+                                                    child: Padding(
+                                                        padding: const EdgeInsets.all(0),
+                                                        child: Text(cityNames,
+                                                        softWrap: true,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          letterSpacing: -0.8,
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      )
+                                                    )
                                                   )
                                                 ],
                                               ),

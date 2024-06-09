@@ -15,11 +15,11 @@ class Bookmark {
 
   factory Bookmark.fromJson(Map<String, dynamic> json) {
     return Bookmark(
-      passid: json['passID'],
-      imageURL: json['imageUrl'],
-      title: json['title'],
-      cityNames: json['cityNames'],
-      price: json['price'],
+      passid: json['passID'] ?? 0,
+      imageURL: json['imageUrl'] ?? '',
+      title: json['title'] ?? '',
+      cityNames: json['cityNames'] ?? '',
+      price: json['price'] ?? '',
     );
   }
 }

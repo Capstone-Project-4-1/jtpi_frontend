@@ -22,7 +22,7 @@ class _filterscreenState extends State<filterscreen> {
   TextEditingController minpriceController = TextEditingController();
   TextEditingController maxpriceController = TextEditingController();
   double _lowerValue = 0.0;
-  double _upperValue = 1600.0;
+  double _upperValue = 50000.0;
   final focus = FocusNode();
   final focus2 = FocusNode();
 
@@ -83,7 +83,15 @@ class _filterscreenState extends State<filterscreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+        onPopInvoked: (bool didPop) {
+          print('뒤로가기');
+      if (didPop) {
+        print('didPop호출');
+        return;
+      }
+    },
+    child: Scaffold(
       appBar: AppBar(
         toolbarHeight: 60.0,
         foregroundColor: Color.fromRGBO(254, 254, 254, 1.0),
@@ -138,7 +146,7 @@ class _filterscreenState extends State<filterscreen> {
       body: Container(
           color: Color.fromRGBO(254, 254, 254, 1.0),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 16.0, 20.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 5.0, 16.0, 20.0),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,98 +302,9 @@ class _filterscreenState extends State<filterscreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height:50),
-                  SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 45,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: TextField(
-                                  controller: departureController,
-                                  onChanged: (text) {
-                                    setState(() {
-                                      SearchParameters[0].departureCity = text; // 도착지 입력값을 SearchParameters에 저장
-                                    });
-                                  },
-                                  style: TextStyle(fontSize: 15, color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "출발역 입력",
-                                    hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                                    prefix: SizedBox(width: 12,),
-                                    filled: true,
-                                    fillColor: Color.fromRGBO(0, 0, 0, 0.05),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 10), // Text 위젯의 위치 조정
-                                  ),
-                                ),
-                              ),
-                            ),
 
-                            SizedBox(height: 4), // 출발지 입력 후 공간 추가
-                            Container(
-                              height: 45,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: TextField(
-                                  controller: arrivalController,
-                                  onChanged: (text) {
-                                    setState(() {
-                                      SearchParameters[0].arrivalCity = text; // 도착지 입력값을 SearchParameters에 저장
-                                    });
-                                  },
-                                  style: TextStyle(fontSize: 15, color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "도착지 입력",
-                                    hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                                    prefix: SizedBox(width: 12,),
-                                    filled: true,
-                                    fillColor: Color.fromRGBO(0, 0, 0, 0.05),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 10), // Text 위젯의 위치 조정
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.swap_vert_sharp,
-                              color: Colors.grey.shade800,
-                            ),
-                            iconSize: 24,
-                            padding: EdgeInsets.zero,
-                            onPressed: swapText,
-                          )                    ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 60), // 위쪽 여백 추가
+                  SizedBox(height: 80), // 위쪽 여백 추가
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -406,7 +325,9 @@ class _filterscreenState extends State<filterscreen> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          SearchParameters[0].transportType = '1';
+                          if (SearchParameters[0].transportType == '1')
+                            SearchParameters[0].transportType = '0';
+                          else SearchParameters[0].transportType = '1';
                           setState(() {
                             tpt[0] = tpt[0] * -1;
                             if (tpt[0] == 1) {
@@ -440,7 +361,9 @@ class _filterscreenState extends State<filterscreen> {
                       SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
-                          SearchParameters[0].transportType = '2';
+                          if (SearchParameters[0].transportType == '2')
+                            SearchParameters[0].transportType = '0';
+                          else SearchParameters[0].transportType = '2';
                           setState(() {
                             tpt[1] = tpt[1] * -1;
                             if (tpt[1] == 1) {
@@ -474,7 +397,9 @@ class _filterscreenState extends State<filterscreen> {
                       SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
-                          SearchParameters[0].transportType = '3';
+                          if (SearchParameters[0].transportType == '3')
+                            SearchParameters[0].transportType = '0';
+                          else SearchParameters[0].transportType = '3';
                           setState(() {
                             tpt[2] = tpt[2] * -1;
                             if (tpt[2] == 1) {
@@ -507,7 +432,9 @@ class _filterscreenState extends State<filterscreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 60), // 위쪽 여백 추가
+
+                  SizedBox(height: 80), // 위쪽 여백 추가
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -627,8 +554,6 @@ class _filterscreenState extends State<filterscreen> {
                         offset: const Offset(0, 0),
                         scrollbarTheme: ScrollbarThemeData(
                           radius: const Radius.circular(40),
-                          thickness: MaterialStateProperty.all<double>(6),
-                          thumbVisibility: MaterialStateProperty.all<bool>(true),
                         ),
                       ),
                       menuItemStyleData: const MenuItemStyleData(
@@ -637,7 +562,9 @@ class _filterscreenState extends State<filterscreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 60), // 위쪽 여백 추가
+
+                  SizedBox(height: 80), // 위쪽 여백 추가
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -658,7 +585,9 @@ class _filterscreenState extends State<filterscreen> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          SearchParameters[0].period = 1;
+                          if (SearchParameters[0].period == 1)
+                            SearchParameters[0].period = 0;
+                          else SearchParameters[0].period = 1;
                           setState(() {
                             date[0] = date[0] * -1;
                             if (date[0] == 1) {
@@ -692,7 +621,9 @@ class _filterscreenState extends State<filterscreen> {
                       SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
-                          SearchParameters[0].period = 2;
+                          if (SearchParameters[0].period == 2)
+                            SearchParameters[0].period = 0;
+                          else SearchParameters[0].period = 2;
                           setState(() {
                             date[1] = date[1] * -1;
                             if (date[1] == 1) {
@@ -726,7 +657,9 @@ class _filterscreenState extends State<filterscreen> {
                       SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
-                          SearchParameters[0].period = 3;
+                          if (SearchParameters[0].period == 3)
+                            SearchParameters[0].period = 0;
+                          else SearchParameters[0].period = 3;
                           setState(() {
                             date[2] = date[2] * -1;
                             if (date[2] == 1) {
@@ -759,7 +692,9 @@ class _filterscreenState extends State<filterscreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 60), // 위쪽 여백 추가
+
+                  SizedBox(height: 80), // 위쪽 여백 추가
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -784,6 +719,15 @@ class _filterscreenState extends State<filterscreen> {
                             alignment: Alignment.center,
                             child: TextField(
                               controller: minpriceController,
+                              onChanged: (text) {
+                                setState(() {
+                                  if(double.parse(text) >= double.parse(maxpriceController.text)) {
+                                    minpriceController.text = maxpriceController.text;
+                                    text = maxpriceController.text; }
+                                  _lowerValue = double.parse(text);
+                                  SearchParameters[0].minPrice = _lowerValue.toInt();
+                                });
+                              },
                               onSubmitted: (text) {
                                 setState(() {
                                   if(double.parse(text) >= double.parse(maxpriceController.text)) {
@@ -826,6 +770,15 @@ class _filterscreenState extends State<filterscreen> {
                             alignment: Alignment.center,
                             child: TextField(
                               controller: maxpriceController,
+                              onChanged: (text) {
+                                setState(() {
+                                  if(double.parse(text) <= double.parse(minpriceController.text)) {
+                                    maxpriceController.text = minpriceController.text;
+                                    text = minpriceController.text; }
+                                  _upperValue = double.parse(text);
+                                  SearchParameters[0].maxPrice = _upperValue.toInt();
+                                });
+                              },
                               onSubmitted: (text) {
                                 setState(() {
                                   if(double.parse(text) <= double.parse(minpriceController.text)) {
@@ -866,7 +819,7 @@ class _filterscreenState extends State<filterscreen> {
                       child: FlutterSlider(
                         values: [_lowerValue, _upperValue],
                         min: 0,
-                        max: 1600,
+                        max: 50000,
                         touchSize: 5,
                         step: FlutterSliderStep(step: 10),
                         rangeSlider: true,
@@ -904,12 +857,13 @@ class _filterscreenState extends State<filterscreen> {
                             _upperValue = upperValue;
                             minpriceController.text = lowerValue.toInt().toString();
                             maxpriceController.text = upperValue.toInt().toString();
-                            SearchParameters[0].minPrice = _lowerValue.toInt();
-                            SearchParameters[0].maxPrice = _upperValue.toInt();
                           });
                         },
-                      )),
-                  SizedBox(height: 60), // 위쪽 여백 추가
+                      )
+                  ),
+
+                  SizedBox(height: 80), // 위쪽 여백 추가
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1131,6 +1085,8 @@ class _filterscreenState extends State<filterscreen> {
         height: 45.0, // 버튼의 높이
         child: FloatingActionButton(
           onPressed: () {
+            SearchParameters[0].minPrice = _lowerValue.toInt();
+            SearchParameters[0].maxPrice = _upperValue.toInt();
             if(SearchParameters[0] == []) {
               Navigator.pop(context);
             } else {
@@ -1167,6 +1123,6 @@ class _filterscreenState extends State<filterscreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+    ));
   }
 }

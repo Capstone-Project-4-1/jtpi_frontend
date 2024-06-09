@@ -135,27 +135,27 @@ class _mainscreenState extends State<mainscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Color.fromRGBO(254, 254, 254, 1.0),
-            foregroundColor: Color.fromRGBO(254, 254, 254, 1.0),
-            surfaceTintColor: Color.fromRGBO(254, 254, 254, 1.0),
+            backgroundColor: Color.fromRGBO(253, 253, 254, 1.0),
+            foregroundColor: Color.fromRGBO(253, 253, 254, 1.0),
+            surfaceTintColor: Color.fromRGBO(253, 253, 254, 1.0),
             elevation: 0,
-            toolbarHeight: 80.0,
+            toolbarHeight: 115.0,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                SizedBox(height: 25,),
+                SizedBox(height: 55,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 60,
+                      height: 60,
                       child: Image.asset('assets/logo1.png'),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      height: 40,
+                      height: 48,
                       child: Image.asset('assets/logo2.png'),
                     ),
                     const SizedBox(width: 10),
@@ -165,14 +165,130 @@ class _mainscreenState extends State<mainscreen> {
             )
         ),
         body: Container(
-            color: Color.fromRGBO(254, 254, 254, 1.0), // 배경색 설정
+            color: Color.fromRGBO(253, 253, 254, 1.0), // 배경색 설정
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15.0, 25.0, 15.0, 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+
+                    SizedBox(height: 10),
+                    Column(
+                      children: [
+                        Container(
+                          //height: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            //color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(0, 51, 120, 0.04),
+                                spreadRadius: 0,
+                                blurRadius: 5.0,
+                                offset: Offset(0, 6),
+                              ),
+                              BoxShadow(
+                                color: Color.fromRGBO(0, 51, 120, 0.02),
+                                spreadRadius: 0,
+                                blurRadius: 5.0,
+                                offset: Offset(0, -2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(0),
+                                  child: TextField(
+                                    focusNode: _focusNode,
+                                    controller: _textEditingController,
+                                    onChanged: onSearchTextChanged,
+                                    onSubmitted: (text) {
+                                      onSearchTextChanged(text);
+                                      goToSearchScreen();
+                                    },
+                                    style: TextStyle(fontSize: 16, color: Colors.black),
+                                    decoration: InputDecoration(
+                                      hintText: "교통패스를 검색해주세요.",
+                                      hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                                      prefixIcon: Padding(
+                                        padding: EdgeInsets.only(left: 18, right: 8, top: 2), // 아이콘의 왼쪽 여백 설정
+                                        child: Icon(
+                                          Icons.search,
+                                          color: Color.fromRGBO(50,50,70, 0.8),
+                                          size: 25,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.9)),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.9)),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(vertical: 10), // Text 위젯의 위치 조정
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ),
+                        SizedBox(height: 15),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0.0, 25.0, 0.0, 25.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '" 교통패스 이름을 모르시나요? "',
+                                style: TextStyle(
+                                  fontSize: 13.5,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height : 5),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => filterscreen(searchText: '')),
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size(50, 30),
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '조건으로 검색하기',
+                                        style: TextStyle(
+                                          //decoration: TextDecoration.underline,
+                                          fontSize: 13.5,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      Container(height: 1.5, width: 111, color: Colors.grey.shade600),
+                                    ],
+                                  )
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 0),
+
+
+                    /*Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[50],
                         borderRadius: BorderRadius.circular(15),
@@ -254,29 +370,42 @@ class _mainscreenState extends State<mainscreen> {
                                     minimumSize: Size(50, 30),
                                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
-                                  child: Text(
-                                    '조건으로 검색하기',
-                                    style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 14.5,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '조건으로 검색하기',
+                                        style: TextStyle(
+                                          //decoration: TextDecoration.underline,
+                                          fontSize: 14.5,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      Container(height: 1, width: 120, color: Colors.grey.shade500),
+                                    ],
+                                  )
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 140),
+                    ),*/
+                    SizedBox(height: 80),
                     Padding(
                         padding: const EdgeInsets.fromLTRB(5.0, 16.0, 5.0, 0.0),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('신규 패스', style: TextStyle(fontSize: 21.5, fontWeight: FontWeight.bold)),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.thumb_up_outlined, size: 19,),
+                                  SizedBox(width: 3),
+                                  Text(' 신규 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                                ],
+                              ),
                               SizedBox(height: 10),
                               Container(
                                 height: 120,
@@ -321,7 +450,7 @@ class _mainscreenState extends State<mainscreen> {
                                                       'NEW !!',
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 21,
+                                                        fontSize: 19,
                                                         fontWeight: FontWeight.w600,
                                                         shadows: [
                                                           Shadow(
@@ -333,7 +462,7 @@ class _mainscreenState extends State<mainscreen> {
                                                       ),
                                                     ),
                                                     Container(
-                                                      width: 170,
+                                                      width: 230,
                                                       child: Text(
                                                         newpasslist[index].title,
                                                         softWrap: true,
@@ -341,11 +470,11 @@ class _mainscreenState extends State<mainscreen> {
                                                         overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                           color: Colors.white,
-                                                          fontSize: 21,
+                                                          fontSize: 19,
                                                           fontWeight: FontWeight.w800,
                                                           shadows: [
                                                             Shadow(
-                                                              color: Colors.grey.shade600,
+                                                              color: Colors.grey.shade400,
                                                               offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
                                                               blurRadius: 5, // 그림자 흐림 정도
                                                             ),
@@ -421,7 +550,15 @@ class _mainscreenState extends State<mainscreen> {
                                 ),
                               ),
                               SizedBox(height: 30),
-                              Text('JTPI 추천 패스', style: TextStyle(fontSize: 21.5, fontWeight: FontWeight.bold)),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.thumb_up_outlined, size: 20,),
+                                  SizedBox(width: 3),
+                                  Text(' JTPI 추천 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                                ],
+                              ),
                               SizedBox(height: 10),
                               Container(
                                 height: 120,
@@ -471,11 +608,11 @@ class _mainscreenState extends State<mainscreen> {
                                                         overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                           color: Colors.white,
-                                                          fontSize: 21,
+                                                          fontSize: 19,
                                                           fontWeight: FontWeight.w800,
                                                           shadows: [
                                                             Shadow(
-                                                              color: Colors.grey.shade600,
+                                                              color: Colors.grey.shade400,
                                                               offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
                                                               blurRadius: 5, // 그림자 흐림 정도
                                                             ),
@@ -557,7 +694,7 @@ class _mainscreenState extends State<mainscreen> {
                 ),
               ),
             )
-        )
+        ),
     );
   }
 }
