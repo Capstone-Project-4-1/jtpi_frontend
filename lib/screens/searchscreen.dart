@@ -341,6 +341,7 @@ class _searchscreenState extends State<searchscreen> {
                       ),
                     ),
                     onSubmitted: (value) {
+                      selectedValue = '기본순';
                       SearchParameters[0].query = _searchText;
                       SearchParameters[0].departureCity = '0';
                       SearchParameters[0].arrivalCity = '0';
@@ -349,8 +350,11 @@ class _searchscreenState extends State<searchscreen> {
                       SearchParameters[0].period = 0;
                       SearchParameters[0].quantityAdults = 0;
                       SearchParameters[0].quantityChildren = 0;
-                      _performSearch(); // 엔터키를 누르면 검색 수행
-                      //printing();
+                      _handleSort('기본순');
+                      //_performSearch(); // 엔터키를 누르면 검색 수행
+                      _getbookmark();
+                      print('누름');
+                      printing();
                     },
                   ),
                 ),
@@ -492,7 +496,7 @@ class _searchscreenState extends State<searchscreen> {
               ),
               _filteredPassDetailInfo.isEmpty
                   ? Expanded(
-                child: Container(
+                child: _isFocused ? Container() : Container(
                   width: MediaQuery.of(context).size.width,
                   color: Colors.white60,
                   child: Column(

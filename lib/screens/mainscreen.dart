@@ -401,14 +401,13 @@ class _mainscreenState extends State<mainscreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Icon(Icons.thumb_up_outlined, size: 19,),
+                                  //Icon(Icons.thumb_up_outlined, size: 19,),
                                   SizedBox(width: 3),
                                   Text(' 신규 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               SizedBox(height: 8),
                               Container(
-                                color: Colors.black,
                                 height: 120,
                                 child: PageView.builder(
                                   itemCount: newpasslist.length,
@@ -555,14 +554,13 @@ class _mainscreenState extends State<mainscreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Icon(Icons.thumb_up_outlined, size: 20,),
+                                  //Icon(Icons.thumb_up_outlined, size: 20,),
                                   SizedBox(width: 3),
                                   Text(' JTPI 추천 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               SizedBox(height: 8),
                               Container(
-                                color: Colors.black,
                                 height: 120,
                                 child: PageView.builder(
                                   itemCount: recommendpasslist.length,
