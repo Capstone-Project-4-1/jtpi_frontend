@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:jtpi/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jtpi/constants/colors.dart';
@@ -10,6 +10,8 @@ import 'package:jtpi/screens/passinfoscreen.dart';
 import 'package:jtpi/screens/searchscreen.dart';
 import 'package:jtpi/screens/bookmarkscreen.dart';
 import 'package:jtpi/util/my_tab.dart';
+import 'package:provider/provider.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final int initialTabIndex; // 초기 탭 인덱스
@@ -42,10 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Color.fromRGBO(254, 254, 254, 1.0),
         body: Column(
           children: [
-            // tab bar view
+    // tab bar view
             Expanded(
               child:
               TabBarView(
+                physics: NeverScrollableScrollPhysics(),
                 children: [
                   // donut page
                   mainscreen(),
@@ -53,7 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            Container(
+    Consumer<CountProvider>(
+    builder: (context, counter, child) {
+    return counter.count == 0 ? Container(
               decoration: BoxDecoration(
                 color: Colors.white, // 배경색을 흰색으로 설정
                 borderRadius: BorderRadius.circular(0), // 컨테이너의 모서리를 둥글게 만듦
@@ -67,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: TabBar(tabs: myTabs),
-            )
+            ) : Container();})
           ],
         ),
       ),

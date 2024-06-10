@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jtpi/models/searchparameters.dart';
-import 'package:jtpi/home.dart';
+import 'package:jtpi/main.dart';
 import 'dart:convert';
 import 'package:jtpi/screens/searchscreen.dart';
 import 'package:jtpi/screens/filterscreen.dart';
@@ -11,7 +11,7 @@ import 'package:jtpi/models/passpreview.dart';
 import 'package:jtpi/models/bookmark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:container_tab_indicator/container_tab_indicator.dart';
-
+import 'package:provider/provider.dart';
 
 
 class mainscreen extends StatefulWidget {
@@ -24,6 +24,7 @@ class mainscreen extends StatefulWidget {
 class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateMixin {
   final FocusNode _focusNode = FocusNode();
   late TabController _tabController;
+  int _passindex = 0;
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<String> bookmarked = [];
@@ -103,9 +104,10 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
         _isFocused = _focusNode.hasFocus;
       });
       if (_focusNode.hasFocus) {
+        Provider.of<CountProvider> (context, listen: false).one();
         //searchT = '';
         //goToSearchScreen();
-      }
+      } else Provider.of<CountProvider> (context, listen: false).zero();
     });
     getPasses();
     _getbookmark();
@@ -142,6 +144,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(253, 253, 254, 1.0),
         /*appBar: AppBar(
             backgroundColor: Color.fromRGBO(253, 253, 254, 1.0),
             foregroundColor: Color.fromRGBO(253, 253, 254, 1.0),
@@ -176,7 +179,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
             behavior: HitTestBehavior.opaque,
             onTap: () { _focusNode.unfocus();},
             child: Container(
-            color: Color.fromRGBO(253, 253, 254, 1.0), // 배경색 설정
+            color: Color.fromRGBO(253, 253, 254, 1.0),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15.0, 25.0, 15.0, 20.0),
@@ -436,7 +439,9 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
+
+
+                              /*Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -601,6 +606,320 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                               SizedBox(height: 8),
                               Container(
                                 height: 120,
+                                color: Colors.black,
+                                child: PageView.builder(
+                                  itemCount: recommendpasslist.length,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => passinfoscreen(passID: recommendpasslist[index].passid),
+                                          ),
+                                        );
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(0),
+                                              color: Colors.grey,
+                                              image: DecorationImage(
+                                                image: NetworkImage(recommendpasslist[index].imageURL),
+                                                fit: BoxFit.cover,
+                                                colorFilter: ColorFilter.mode(
+                                                  Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
+                                                  BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
+                                                ),
+                                              ),
+                                            ),
+                                            width: double.infinity,
+                                            child: Align(
+                                              alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
+                                              child: Padding(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      width: 230,
+                                                      child: Text(
+                                                        recommendpasslist[index].title,
+                                                        softWrap: true,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 19,
+                                                          fontWeight: FontWeight.w800,
+                                                          shadows: [
+                                                            Shadow(
+                                                              color: Colors.grey.shade400,
+                                                              offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
+                                                              blurRadius: 5, // 그림자 흐림 정도
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 10,
+                                            right: 10,
+                                            child: Container(
+                                                width: 40,
+                                                padding: EdgeInsets.fromLTRB(8,3,8,3),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black54,
+                                                  borderRadius: BorderRadius.circular(30),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    '${index + 1}/${recommendpasslist.length}', // 현재 페이지 / 전체 페이지 수
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 11.5,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                )
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 10,
+                                            right: 10,
+                                            child: Container(
+                                                width: 90,
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.circular(40),
+                                                ),
+                                                child: Padding(
+                                                    padding: EdgeInsets.fromLTRB(5,0,2,0),
+                                                    child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Text(
+                                                            '보러가기 ', // 현재 페이지 / 전체 페이지 수
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 11.5,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ),
+                                                          Icon(
+                                                            Icons.arrow_forward,
+                                                            color: Colors.black,
+                                                            size: 13,
+                                                          ),
+                                                        ]
+                                                    )
+                                                )
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),*/
+
+                              SizedBox(height: 128),
+                              DefaultTabController(
+                                length: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SizedBox(
+                                      height: 42,
+                                      width: 200,
+                                      child: TabBar(
+                                        labelPadding: EdgeInsets.zero,
+                                        padding: EdgeInsets.zero,
+                                        indicatorPadding: EdgeInsets.zero,
+                                        dividerColor: Colors.transparent,
+                                        controller: _tabController,
+                                        onTap: (index) {
+                                          setState(() {
+                                            _passindex = index;
+                                            print(_passindex);
+                                          });
+                                        },
+                                        tabs: [
+                                          Text('신규 패스', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                          Text('추천 패스', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                        ],
+                                        labelColor: Color.fromRGBO(80,80,80,1.0),
+                                        unselectedLabelColor: Colors.grey,
+                                        indicator: ContainerTabIndicator(
+                                          radius: BorderRadius.circular(25),
+                                          color: Color.fromRGBO(80,80,80,1.0),
+                                          widthFraction: 0.6,
+                                          height: 4,
+                                          padding: const EdgeInsets.only(top: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              _passindex == 0 ?
+                              Container(
+                                height: 150,
+                                //color: Colors.yellow,
+                                child: PageView.builder(
+                                  itemCount: newpasslist.length,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => passinfoscreen(passID: newpasslist[index].passid),
+                                          ),
+                                        );
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(0),
+                                              color: Colors.grey,
+                                              image: DecorationImage(
+                                                image: NetworkImage(newpasslist[index].imageURL),
+                                                fit: BoxFit.cover,
+                                                colorFilter: ColorFilter.mode(
+                                                  Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
+                                                  BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
+                                                ),
+                                              ),
+                                            ),
+                                            width: double.infinity,
+                                            child: Align(
+                                              alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
+                                              child: Padding(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'NEW !!',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 19,
+                                                        fontWeight: FontWeight.w600,
+                                                        shadows: [
+                                                          Shadow(
+                                                            color: Colors.grey.shade900,
+                                                            offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
+                                                            blurRadius: 5,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 230,
+                                                      child: Text(
+                                                        newpasslist[index].title,
+                                                        softWrap: true,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 19,
+                                                          fontWeight: FontWeight.w800,
+                                                          shadows: [
+                                                            Shadow(
+                                                              color: Colors.grey.shade400,
+                                                              offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
+                                                              blurRadius: 5, // 그림자 흐림 정도
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 10,
+                                            right: 10,
+                                            child: Container(
+                                                width: 40,
+                                                padding: EdgeInsets.fromLTRB(8,3,8,3),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black54,
+                                                  borderRadius: BorderRadius.circular(30),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    '${index + 1}/${newpasslist.length}', // 현재 페이지 / 전체 페이지 수
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 11.5,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                )
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 10,
+                                            right: 10,
+                                            child: Container(
+                                                width: 90,
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.circular(40),
+                                                ),
+                                                child: Padding(
+                                                    padding: EdgeInsets.fromLTRB(5,0,2,0),
+                                                    child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Text(
+                                                            '보러가기 ', // 현재 페이지 / 전체 페이지 수
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 11.5,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ),
+                                                          Icon(
+                                                            Icons.arrow_forward,
+                                                            color: Colors.black,
+                                                            size: 13,
+                                                          ),
+                                                        ]
+                                                    )
+                                                )
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            : Container(
+                                //color: Colors.black,
+                                height: 150,
                                 child: PageView.builder(
                                   itemCount: recommendpasslist.length,
                                   itemBuilder: (context, index) {
@@ -726,39 +1045,6 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                   },
                                 ),
                               ),
-                              /*DefaultTabController(
-                                length: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: 56,
-                                      width: 300,
-                                      child: TabBar(
-                                        controller: _tabController,
-                                        onTap: (index) {
-                                          print(index);
-                                        },
-                                        tabs: [
-                                          Text('신규 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                                          Text('추천 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                                        ],
-                                        labelColor: Color.fromRGBO(80,80,80,1.0),
-                                        unselectedLabelColor: Colors.grey,
-                                        indicator: ContainerTabIndicator(
-                                          radius: BorderRadius.circular(25),
-                                          color: Color.fromRGBO(80,80,80,1.0),
-                                          widthFraction: 0.6,
-                                          height: 4,
-                                          padding: const EdgeInsets.only(top: 26),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),*/
-                              SizedBox(height: 8),
                             ]
                         )
                     ),

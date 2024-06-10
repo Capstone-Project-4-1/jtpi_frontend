@@ -15,10 +15,12 @@ class MyTab extends StatelessWidget {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 8),
             Icon(
               iconData,
-              size: 35,
+              size: 25,
             ),
+            SizedBox(height: 5),
             Text(
               text,
               style: TextStyle(

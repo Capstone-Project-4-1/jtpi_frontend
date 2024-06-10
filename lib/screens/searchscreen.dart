@@ -128,7 +128,7 @@ class _searchscreenState extends State<searchscreen> {
         _isFocused = _focusNode.hasFocus;
       });
     });
-    if (widget.screennumber == 0) _focusNode.requestFocus();
+    //if (widget.screennumber == 0) _focusNode.requestFocus();
     _textEditingController.addListener(_onSearchTextChanged);
     _searchText = widget.searchparameter.query.toLowerCase(); // 초기 검색어 설정
     if (widget.searchparameter.query == '0') _textEditingController.text = '';
