@@ -10,6 +10,7 @@ import 'package:jtpi/models/passdetailinfo.dart';
 import 'package:jtpi/models/passpreview.dart';
 import 'package:jtpi/models/bookmark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:container_tab_indicator/container_tab_indicator.dart';
 
 
 
@@ -20,8 +21,9 @@ class mainscreen extends StatefulWidget {
   State<mainscreen> createState() => _mainscreenState();
 }
 
-class _mainscreenState extends State<mainscreen> {
+class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateMixin {
   final FocusNode _focusNode = FocusNode();
+  late TabController _tabController;
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<String> bookmarked = [];
@@ -39,6 +41,8 @@ class _mainscreenState extends State<mainscreen> {
         quantityChildren: 0
     )
   ];
+
+  bool _isFocused = false;
 
   Future<void> _getbookmark() async {
     final SharedPreferences prefs = await _prefs;
@@ -93,10 +97,14 @@ class _mainscreenState extends State<mainscreen> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
+    _tabController = TabController(length: 2, vsync: this);
     _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
       if (_focusNode.hasFocus) {
-        searchT = '';
-        goToSearchScreen();
+        //searchT = '';
+        //goToSearchScreen();
       }
     });
     getPasses();
@@ -134,7 +142,7 @@ class _mainscreenState extends State<mainscreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
             backgroundColor: Color.fromRGBO(253, 253, 254, 1.0),
             foregroundColor: Color.fromRGBO(253, 253, 254, 1.0),
             surfaceTintColor: Color.fromRGBO(253, 253, 254, 1.0),
@@ -163,8 +171,11 @@ class _mainscreenState extends State<mainscreen> {
                 ),
               ],
             )
-        ),
-        body: Container(
+        ),*/
+        body: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () { _focusNode.unfocus();},
+            child: Container(
             color: Color.fromRGBO(253, 253, 254, 1.0), // 배경색 설정
             child: SingleChildScrollView(
               child: Padding(
@@ -172,9 +183,32 @@ class _mainscreenState extends State<mainscreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-                    SizedBox(height: 10),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(height: 85,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 70,
+                              height: 70,
+                              child: Image.asset('assets/logo1.png'),
+                            ),
+                            const SizedBox(width: 14),
+                            Container(
+                              height: 56,
+                              child: Image.asset('assets/logo2.png'),
+                            ),
+                            const SizedBox(width: 6),
+                          ],
+                        ),
+                        SizedBox(height: 34),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    /*Column(
                       children: [
                         Container(
                           //height: 60,
@@ -284,29 +318,32 @@ class _mainscreenState extends State<mainscreen> {
                           ),
                         ),
                       ],
-                    ),
+                    ),*/
                     SizedBox(height: 0),
 
 
-                    /*Container(
+                    Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(15),
+                        color: Color.fromRGBO(252, 252, 252, 1.0),
+                        //border: Border.all(color: Color.fromRGBO(0, 51, 120, 0.8)),
+                        borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromRGBO(0, 0, 100, 0.08),
-                            spreadRadius: 2,
-                            blurRadius: 7,
-                            offset: Offset(0, 1),
+                            color: Color.fromRGBO(0, 40, 96, 0.15),
+                            spreadRadius: 1.4,
+                            blurRadius: 2.1,
+                            offset: Offset(0, 1.2),
                           ),
                         ],
                       ),
-                      padding: EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Container(
-                            color: Colors.white,
-                            height: 60,
+                            height:54,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(35),
+                            ),
                             child: Align(
                               alignment: Alignment.center,
                               child: TextField(
@@ -319,81 +356,83 @@ class _mainscreenState extends State<mainscreen> {
                                 },
                                 style: TextStyle(fontSize: 17, color: Colors.black),
                                 decoration: InputDecoration(
-                                  hintText: "교통패스를 검색해주세요.",
-                                  hintStyle: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                                  hintText: _isFocused ? "" : "교통패스를 검색해주세요.",
+                                  hintStyle: TextStyle(fontSize: 16, color: Colors.grey[700], fontWeight: FontWeight.w400),
                                   prefixIcon: Padding(
-                                    padding: EdgeInsets.only(left: 8, right: 5), // 아이콘의 왼쪽 여백 설정
+                                    padding: EdgeInsets.only(left: 25, right: 15, top: 2), // 아이콘의 왼쪽 여백 설정
                                     child: Icon(
                                       Icons.search,
-                                      color: Color.fromRGBO(200, 200, 240, 1.0),
-                                      size: 35,
+                                      color: Color.fromRGBO(50,50,70, 0.8),
+                                      size: 25,
                                     ),
                                   ),
                                   filled: true,
                                   fillColor: Colors.white,
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(width: 2.2, color: Color.fromRGBO(0, 51, 120, 1.0)),
+                                    borderRadius: BorderRadius.circular(35),
+                                    borderSide: BorderSide(width: 0, color: Color.fromRGBO(0, 51, 120, 0)),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(width: 2.2, color: Color.fromRGBO(0, 51, 120, 1.0)),
+                                    borderRadius: BorderRadius.circular(35),
+                                    borderSide: BorderSide(width: 0, color: Color.fromRGBO(0, 51, 120, 0)),
                                   ),
                                   contentPadding: EdgeInsets.symmetric(vertical: 10), // Text 위젯의 위치 조정
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 25.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '교통패스 이름을 모르시나요?',
-                                  style: TextStyle(
-                                    fontSize: 14.5,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                SizedBox(height : 5),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => filterscreen(searchText: '')),
-                                    );
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size(50, 30),
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        '조건으로 검색하기',
-                                        style: TextStyle(
-                                          //decoration: TextDecoration.underline,
-                                          fontSize: 14.5,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey[600],
-                                        ),
+                          _isFocused == false ? Container(color: Colors.transparent) :
+                          Container(
+                            height: 150,
+                            color: Colors.transparent,
+                            child:Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '교통패스 이름을 모르시나요?',
+                                      style: TextStyle(
+                                        fontSize: 14.5,
+                                        color: Colors.grey[600],
                                       ),
-                                      Container(height: 1, width: 120, color: Colors.grey.shade500),
-                                    ],
-                                  )
+                                    ),
+                                    SizedBox(height : 5),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => filterscreen(searchText: '', screennumber: 1,)),
+                                          );
+                                        },
+                                        style: TextButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size(50, 30),
+                                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              '조건으로 검색하기',
+                                              style: TextStyle(
+                                                //decoration: TextDecoration.underline,
+                                                fontSize: 14.5,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            Container(height: 1, width: 120, color: Colors.grey.shade500),
+                                          ],
+                                        )
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
                           ),
                         ],
                       ),
-                    ),*/
-                    SizedBox(height: 80),
+                    ),
+
+                    SizedBox(height: 150),
                     Padding(
-                        padding: const EdgeInsets.fromLTRB(5.0, 16.0, 5.0, 0.0),
+                        padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -686,7 +725,40 @@ class _mainscreenState extends State<mainscreen> {
                                     );
                                   },
                                 ),
-                              )
+                              ),
+                              /*DefaultTabController(
+                                length: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 56,
+                                      width: 300,
+                                      child: TabBar(
+                                        controller: _tabController,
+                                        onTap: (index) {
+                                          print(index);
+                                        },
+                                        tabs: [
+                                          Text('신규 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                                          Text('추천 패스', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                                        ],
+                                        labelColor: Color.fromRGBO(80,80,80,1.0),
+                                        unselectedLabelColor: Colors.grey,
+                                        indicator: ContainerTabIndicator(
+                                          radius: BorderRadius.circular(25),
+                                          color: Color.fromRGBO(80,80,80,1.0),
+                                          widthFraction: 0.6,
+                                          height: 4,
+                                          padding: const EdgeInsets.only(top: 26),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),*/
+                              SizedBox(height: 8),
                             ]
                         )
                     ),
@@ -694,7 +766,8 @@ class _mainscreenState extends State<mainscreen> {
                 ),
               ),
             )
-        ),
+        )
+    ),
     );
   }
 }
