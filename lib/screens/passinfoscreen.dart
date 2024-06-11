@@ -330,27 +330,27 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
               pinned: true,
               expandedHeight: 200.0,
               flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  children: [
-                    Image.network(
-                  passDetailInfo[0].imageURL,
-                  fit: BoxFit.cover,
-                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                    return Container(
-                      padding: EdgeInsets.all(10),
-                        child: Image.asset(
-                      'assets/logo3.png',
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                    );
-                  },
-                ),
-                    Container(
-                      color: Colors.grey.withOpacity(0.1), // 회색 반투명 레이어
-                    ),
-                    ]
-                )
+                  background: Stack(
+                      children: [
+                        Image.network(
+                          passDetailInfo[0].imageURL,
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return Container(
+                                padding: EdgeInsets.all(10),
+                                child: Image.asset(
+                                  'assets/logo3.png',
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                )
+                            );
+                          },
+                        ),
+                        Container(
+                          color: Colors.grey.withOpacity(0.1), // 회색 반투명 레이어
+                        ),
+                      ]
+                  )
               ),
               bottom: _showTabBar
                   ? TabBar(
@@ -524,52 +524,52 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                     child: Divider(height: 2, color: Colors.grey.shade300),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
-                                child: Icon(Icons.circle, size: 5,)),
-                            SizedBox(width: 8,),
-                            Text('어른 $priceAdult 엔 / 어린이 : $priceChild 엔',
-                              style: TextStyle(fontWeight: FontWeight.w500),),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
-                                child: Icon(Icons.circle, size: 5,)),
-                            SizedBox(width: 8,),
-                            Text('유효기간 ' + passDetailInfo[0].period.toString()+'일',
-                              style: TextStyle(fontWeight: FontWeight.w500),),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
-                              child: Icon(Icons.circle, size: 5,)),
-                            SizedBox(width: 8,),
-        Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(0),
-              child: Text(passDetailInfo[0].break_even_usage.toString(),
-                              style: TextStyle(fontWeight: FontWeight.w500),)
-            )
-        ),
-                          ],
-                        )
-                      ]
-                    )
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
+                                    child: Icon(Icons.circle, size: 5,)),
+                                SizedBox(width: 8,),
+                                Text('어른 $priceAdult 엔 / 어린이 : $priceChild 엔',
+                                  style: TextStyle(fontWeight: FontWeight.w500),),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
+                                    child: Icon(Icons.circle, size: 5,)),
+                                SizedBox(width: 8,),
+                                Text('유효기간 ' + passDetailInfo[0].period.toString()+'일',
+                                  style: TextStyle(fontWeight: FontWeight.w500),),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
+                                    child: Icon(Icons.circle, size: 5,)),
+                                SizedBox(width: 8,),
+                                Expanded(
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(0),
+                                        child: Text(passDetailInfo[0].break_even_usage.toString(),
+                                          style: TextStyle(fontWeight: FontWeight.w500),)
+                                    )
+                                ),
+                              ],
+                            )
+                          ]
+                      )
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),

@@ -142,29 +142,29 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
         // 북마크된 항목만 보여주는 GridView.builder
         body: _filteredPassDetailInfo.isEmpty
             ? Container(
-            width: MediaQuery.of(context).size.width,
-            color: Colors.white60,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // 수직 방향 중앙 정렬
-              crossAxisAlignment: CrossAxisAlignment.center, // 수평 방향 중앙 정렬
-              children: [
-                Icon(
-                  Icons.star_border,
-                  size: 48,
-                  color: Colors.deepPurple,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.white60,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // 수직 방향 중앙 정렬
+            crossAxisAlignment: CrossAxisAlignment.center, // 수평 방향 중앙 정렬
+            children: [
+              Icon(
+                Icons.star_border,
+                size: 48,
+                color: Colors.deepPurple,
+              ),
+              SizedBox(height: 16), // 아이콘과 텍스트 사이의 간격 조절
+              Text(
+                '즐겨찾기한 상품이 없어요',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-                SizedBox(height: 16), // 아이콘과 텍스트 사이의 간격 조절
-                Text(
-                  '즐겨찾기한 상품이 없어요',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          )
-        : Column(
+              ),
+            ],
+          ),
+        )
+            : Column(
           children: [
             Container(
               color: Color.fromRGBO(254, 254, 254, 1.0),
@@ -181,9 +181,9 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                               child: Text(
                                 '기본순',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 13.5,
                                   //fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(100,100,100,1.0),
+                                  color: Colors.black,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -195,10 +195,10 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                           value: item,
                           child: Text(
                             item,
-                            style: const TextStyle(
-                              fontSize: 12,
+                            style: TextStyle(
+                              fontSize: 13.5,
                               //fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: selectedValue == item ? Colors.black : Colors.grey,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -214,9 +214,9 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                           }
                         },
                         buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 66,
-                          padding: const EdgeInsets.only(left: 8, right: 3),
+                          height: 38,
+                          width: 90,
+                          padding: const EdgeInsets.only(left: 10, right: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(40),
                             border: Border.all(
@@ -230,13 +230,13 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                           icon: Icon(
                             Icons.expand_more,
                           ),
-                          iconSize: 16,
+                          iconSize: 20,
                           iconEnabledColor: Color.fromRGBO(100,100,100,1.0),
                           iconDisabledColor: Colors.grey,
                         ),
                         dropdownStyleData: DropdownStyleData(
                           //maxHeight: 100,
-                          width: 60,
+                          width: 80,
                           elevation: 1,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(0),
@@ -250,7 +250,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                           ),
                         ),
                         menuItemStyleData: const MenuItemStyleData(
-                          height: 20,
+                          height: 30,
                           padding: EdgeInsets.only(left: 10, right: 10),
                         ),
                       ),
@@ -284,11 +284,11 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                           onTap: () {
                             // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    passinfoscreen(passID: _filteredPassDetailInfo[index].passid),
-                              )
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      passinfoscreen(passID: _filteredPassDetailInfo[index].passid),
+                                )
                             ).then((value) {
                               print('ㄲ');
                               _getbookmark();
