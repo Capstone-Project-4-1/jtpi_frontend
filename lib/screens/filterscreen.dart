@@ -265,7 +265,7 @@ class _filterscreenState extends State<filterscreen> {
                                               child: Padding(
                                                 padding: const EdgeInsets.symmetric(vertical: 0),
                                                 child: Text(e,
-                                                    style: TextStyle(fontSize: 12, color: Colors.blue)),
+                                                    style: TextStyle(fontSize: 12, color: Colors.black)),
                                               )))
                                               .toList();
                                         },

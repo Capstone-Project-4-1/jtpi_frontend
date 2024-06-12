@@ -332,19 +332,22 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
               flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                       children: [
-                        Image.network(
-                          passDetailInfo[0].imageURL,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                            return Container(
-                                padding: EdgeInsets.all(10),
-                                child: Image.asset(
-                                  'assets/logo3.png',
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                )
-                            );
-                          },
+                        Center(
+                          child: Image.network(
+                            passDetailInfo[0].imageURL,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                              return Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Image.asset(
+                                    'assets/logo3.png',
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  )
+                              );
+                            },
+                          )
                         ),
                         Container(
                           color: Colors.grey.withOpacity(0.1), // 회색 반투명 레이어
@@ -572,7 +575,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                       )
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -587,12 +590,11 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
-                        SizedBox(height: 15),
                         Container(
+                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                           child: Text('${passDetailInfo[0].description_information}'),
                         ),
-                        SizedBox(height: 20),
-                        Padding(padding: EdgeInsets.fromLTRB(25, 15, 25, 15),
+                        Padding(padding: EdgeInsets.fromLTRB(0, 35, 0, 15),
                           child: Column(
                             children: [
                               ExpandableNotifier(
@@ -717,7 +719,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                           ),
                         ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 40),
                         SizedBox(height: 10, key: _benefitKey,),
                         SizedBox(height: 20),
                         Container(
@@ -729,12 +731,12 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
-                        SizedBox(height: 15),
                         Container(
+                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                           child: Text('${passDetailInfo[0].benefit_information}'),
                         ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 40),
                         SizedBox(height: 10, key: _reservationKey,),
                         SizedBox(height: 20),
                         Container(
@@ -746,12 +748,12 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
-                        SizedBox(height: 15),
                         Container(
+                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                           child: Text('${passDetailInfo[0].reservation_information}'),
                         ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 40),
                         SizedBox(height: 10, key: _refundKey,),
                         SizedBox(height: 20),
                         Container(
@@ -763,8 +765,8 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               color: Color.fromRGBO(0, 51, 120, 1.0), // 텍스트 색상 설정
                             ),),
                         ),
-                        SizedBox(height: 15),
                         Container(
+                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                           child: Text('${passDetailInfo[0].refund_information}'),
                         ),
                       ],

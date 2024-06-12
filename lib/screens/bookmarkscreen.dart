@@ -120,7 +120,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
             elevation: 0,
             toolbarHeight: 55.0,
             title: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height:10),
                 Container(
