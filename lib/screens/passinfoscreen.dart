@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jtpi/models/passdetailinfo.dart';
-import 'package:jtpi/models/passpreview.dart';
 import 'package:intl/intl.dart'; // intl 패키지 임포트
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:jtpi/models/bookmark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expandable/expandable.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class passinfoscreen extends StatefulWidget {
   final int passID;
@@ -25,19 +24,19 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
   List<PassDetailInfo> passDetailInfo = [
     PassDetailInfo(
       passid: 0,
-      transportType: '0',
+      transportType: '이동수단',
       imageURL: '',
-      title: 'TITLE',
+      title: '패스 TITLE',
       routeInformation: '도쿄',
       price: '2000,1000',
       Map_Url: "0",
-      break_even_usage: '0회 이상 이용시 본전 ! 0회 이상 이용시 ! 0회 이상 이용시 !',
-      stationNames: '도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄,도쿄',
-      description_information: '상품설명상품설명상품설명상품설명상품설명상품설명상품설명상품설명',
+      break_even_usage: '0회 이상 이용시 본전 !',
+      stationNames: '이동하는 모든 역 목록',
+      description_information: '상품 설명 칸',
       period: 0,
-      benefit_information: '혜택 정보가 없습니다.',
-      reservation_information: '예매 정보가 없습니다.',
-      refund_information: '환불 정보가 없습니다.',
+      benefit_information: '혜택 정보 칸',
+      reservation_information: '예매 정보 칸',
+      refund_information: '환불 정보 칸',
     ),
   ];
   late TabController _tabController;
@@ -47,6 +46,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
   Color _shadowColor = Colors.grey.shade700;
   double screenHeight = 0.0;
   double screenWidth = 150.0;
+  String siteUrl = "";
 
   final GlobalKey _rootKey = GlobalKey();
   final GlobalKey _descriptionKey = GlobalKey();
@@ -92,7 +92,11 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
         print('A');
         passDetailInfo = results;
         _scrollToIndex(6);
-        print(passDetailInfo[0].Map_Url);
+        if (passDetailInfo[0].benefit_information.contains("!@#")) {
+          siteUrl = passDetailInfo[0].benefit_information.split('!@#')[1];
+          passDetailInfo[0].benefit_information = passDetailInfo[0].benefit_information.split('!@#')[0];
+          print('출력출력' + siteUrl);
+        }
       });
     } catch (e) {
       print('Error: $e');
@@ -314,7 +318,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                       child: IconButton(
                         padding: EdgeInsets.zero, // 패딩 설정
                         constraints: BoxConstraints(),
-                        iconSize: 20,
+                        iconSize: 28,
                         icon: Icon(
                           Icons.arrow_back_ios_new,
                           color: _titleColor,
@@ -398,16 +402,16 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
               actions: [
                 Column(
                     children: [
-                      SizedBox(height: 10,),
+                      SizedBox(height: 5,),
                       Container(
-                        height: 22,
+                        //height: 22,
                         child: IconButton(
                           icon: Icon(
                             bookmarked.contains(widget.passID.toString()) ? Icons.star : Icons.star_border_sharp,
                             color: bookmarked.contains(widget.passID.toString()) ? Colors.amber : _titleColor,
                             shadows: <Shadow>[Shadow(color: _shadowColor, blurRadius: 2.0)],
                           ),
-                          iconSize: 28,
+                          iconSize: 32,
                           onPressed: () {
                             setState(() {
                               if (bookmarked.contains(widget.passID.toString())) {
@@ -427,7 +431,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
               delegate: SliverChildListDelegate(
                 [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(17, 20, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -523,11 +527,11 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                    padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                     child: Divider(height: 2, color: Colors.grey.shade300),
                   ),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(25, 0, 25, 20),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -560,7 +564,8 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                               children: [
                                 Padding(
                                     padding: const EdgeInsets.fromLTRB(0, 8.5, 0, 0),
-                                    child: Icon(Icons.circle, size: 5,)),
+                                    child: Icon(Icons.circle,
+                                      size: passDetailInfo[0].break_even_usage.toString() == "" ? 0: 5,)),
                                 SizedBox(width: 8,),
                                 Expanded(
                                     child: Padding(
@@ -575,7 +580,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                       )
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
+                    padding: const EdgeInsets.fromLTRB(25, 20, 25, 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -591,7 +596,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                             ),),
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                          padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
                           child: Text('${passDetailInfo[0].description_information}'),
                         ),
                         Padding(padding: EdgeInsets.fromLTRB(0, 35, 0, 15),
@@ -628,14 +633,14 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                                                 ),
                                                 child: InkWell(
                                                   onTap: () { controller.toggle(); },
+                                                  splashColor: Colors.grey,
                                                   child: IconButton(
                                                     padding: EdgeInsets.zero,
                                                     onPressed: () { controller.toggle(); },
                                                     icon: Icon(controller.expanded ? Icons.zoom_in_map_rounded : Icons.zoom_out_map_rounded),
                                                     color: Color.fromRGBO(50, 50, 50, 1.0),
                                                     iconSize: 25,
-                                                  ),
-                                                  splashColor: Colors.grey, // 터치 효과 색상 설정
+                                                  ), // 터치 효과 색상 설정
                                                 ),
 
                                               ),
@@ -646,7 +651,6 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                                     )
                                 ),
                               ),
-                              Divider(height: 0, color: Colors.transparent,),
                               ExpandableNotifier(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -695,7 +699,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                                                 children: [
                                                   Text(
                                                     controller.expanded ? "모든 역 목록" : "모든 역 목록",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontWeight: FontWeight.w600,
                                                       color: Color.fromRGBO(0, 51, 102, 0.9),
                                                     ),
@@ -723,7 +727,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                         SizedBox(height: 10, key: _benefitKey,),
                         SizedBox(height: 20),
                         Container(
-                          child: Text('혜택',
+                          child: const Text('혜택',
                             style: TextStyle(
                               letterSpacing: 0,
                               fontSize: 18, // 텍스트 크기 조정
@@ -732,15 +736,31 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                             ),),
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                          child: Text('${passDetailInfo[0].benefit_information}'),
+                          padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
+                          child: Text(passDetailInfo[0].benefit_information == "" ? "별도의 혜택이 없습니다." : passDetailInfo[0].benefit_information),
                         ),
+                      siteUrl == "" ? Container() :
+                      TextButton(
+                          onPressed: () {
+                        Future<void> _launchUrl() async {
+                          try {
+                            final Uri url = Uri.parse(siteUrl);
+                            if (!await launchUrl(url)) {
+                              print('실패..');
+                              throw Exception('Could not launch $url');
+                            }
+                          } catch (e) {
+                            print('실패.. $e');
+                          }
+                        }
+                        _launchUrl();
+                      }, child: Text('공식 페이지 방문하기', style: TextStyle(fontWeight: FontWeight.w600, color: Color.fromRGBO(50, 50, 50, 1.0)),)),
 
                         SizedBox(height: 40),
                         SizedBox(height: 10, key: _reservationKey,),
                         SizedBox(height: 20),
                         Container(
-                          child: Text('예매',
+                          child: const Text('예매',
                             style: TextStyle(
                               letterSpacing: 0,
                               fontSize: 18, // 텍스트 크기 조정
@@ -749,7 +769,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                             ),),
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                          padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
                           child: Text('${passDetailInfo[0].reservation_information}'),
                         ),
 
@@ -757,7 +777,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                         SizedBox(height: 10, key: _refundKey,),
                         SizedBox(height: 20),
                         Container(
-                          child: Text('환불',
+                          child: const Text('환불',
                             style: TextStyle(
                               letterSpacing: 0,
                               fontSize: 18, // 텍스트 크기 조정
@@ -766,7 +786,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                             ),),
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                          padding: const EdgeInsets.fromLTRB(5, 15, 5, 40),
                           child: Text('${passDetailInfo[0].refund_information}'),
                         ),
                       ],
@@ -778,6 +798,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
           ],
         ),
       ),
+
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -18,7 +18,7 @@ class Bookmark {
       passid: json['passID'] ?? 0,
       imageURL: json['imageUrl'] ?? '',
       title: json['title'] ?? '',
-      cityNames: json['cityNames'] ?? '',
+      cityNames: json['routeInformation'] ?? '',
       price: json['price'] ?? '',
     );
   }

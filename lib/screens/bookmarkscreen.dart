@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jtpi/screens/passinfoscreen.dart';
-import 'package:jtpi/models/passdetailinfo.dart';
-import 'package:intl/intl.dart'; // intl 패키지 임포트
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jtpi/models/bookmark.dart';
@@ -245,8 +243,6 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                           offset: const Offset(3, 0),
                           scrollbarTheme: ScrollbarThemeData(
                             radius: const Radius.circular(40),
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility: MaterialStateProperty.all<bool>(true),
                           ),
                         ),
                         menuItemStyleData: const MenuItemStyleData(
@@ -370,22 +366,27 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                               children: [
                                                 Icon(Icons.location_on,
                                                   color: Colors.blue.shade500, size: 14,),
-                                                SizedBox(width: 3,),
-                                                Text(cityNames,
-                                                  softWrap: true,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    letterSpacing: -0.8,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                const SizedBox(width: 3,),
+                                                Expanded(
+                                                    child: Padding(
+                                                        padding: const EdgeInsets.all(0),
+                                                        child: Text(cityNames,
+                                                          softWrap: true,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: const TextStyle(
+                                                            letterSpacing: -0.8,
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        )
+                                                    )
                                                 )
                                               ],
                                             ),
-                                            SizedBox(height: 2),
+                                            const SizedBox(height: 2),
                                             Text(
-                                              price.split(',')[0] + ' 엔',
+                                              '${price.split(',')[0]} 엔',
                                               softWrap: true,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,

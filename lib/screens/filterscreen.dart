@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:jtpi/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +171,7 @@ class _filterscreenState extends State<filterscreen> {
               child: Container(
                   color: Color.fromRGBO(254, 254, 254, 1.0),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 20.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,10 +206,11 @@ class _filterscreenState extends State<filterscreen> {
                                         },
                                         key: const Key('departureCity'),
                                         controller: departureController,
-                                        hint: '출발역',
-                                        itemHeight: 40,
+                                        hint: '출발역 입력',
+                                        itemHeight: 25,
                                         searchStyle: TextStyle(fontSize: 15, color: Colors.black),
                                         searchInputDecoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(10),
                                           hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -271,10 +271,11 @@ class _filterscreenState extends State<filterscreen> {
                                         },
                                         key: const Key('arrivalCity'),
                                         controller: arrivalController,
-                                        hint: '도착역',
-                                        itemHeight: 40,
+                                        hint: '도착역 입력',
+                                        itemHeight: 25,
                                         searchStyle: TextStyle(fontSize: 15, color: Colors.black),
                                         searchInputDecoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(10),
                                           hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -331,7 +332,7 @@ class _filterscreenState extends State<filterscreen> {
                             ],
                           ),
 
-                          SizedBox(height: 80), // 위쪽 여백 추가
+                          SizedBox(height: 50), // 위쪽 여백 추가
 
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,16 +366,17 @@ class _filterscreenState extends State<filterscreen> {
                                   });
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(15, 5, 15, 5)),
+                                  backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (tpt[0] == 1) ? Colors.grey.shade100 : Colors.transparent;
                                   }),
-                                  side: MaterialStateProperty.resolveWith<BorderSide>((states) {
+                                  side: WidgetStateProperty.resolveWith<BorderSide>((states) {
                                     return BorderSide(
                                       color: (tpt[0] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
                                       width: 0.8, // 테두리 두께
                                     );
                                   }),
-                                  foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (tpt[0] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
@@ -401,16 +403,17 @@ class _filterscreenState extends State<filterscreen> {
                                   });
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(15, 5, 15, 5)),
+                                  backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (tpt[1] == 1) ? Colors.grey.shade100 : Colors.transparent;
                                   }),
-                                  side: MaterialStateProperty.resolveWith<BorderSide>((states) {
+                                  side: WidgetStateProperty.resolveWith<BorderSide>((states) {
                                     return BorderSide(
                                       color: (tpt[1] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
                                       width: 0.8, // 테두리 두께
                                     );
                                   }),
-                                  foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (tpt[1] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
@@ -437,16 +440,17 @@ class _filterscreenState extends State<filterscreen> {
                                   });
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(15, 5, 15, 5)),
+                                  backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (tpt[2] == 1) ? Colors.grey.shade100 : Colors.transparent;
                                   }),
-                                  side: MaterialStateProperty.resolveWith<BorderSide>((states) {
+                                  side: WidgetStateProperty.resolveWith<BorderSide>((states) {
                                     return BorderSide(
                                       color: (tpt[2] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
                                       width: 0.8, // 테두리 두께
                                     );
                                   }),
-                                  foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (tpt[2] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
@@ -461,7 +465,7 @@ class _filterscreenState extends State<filterscreen> {
                             ],
                           ),
 
-                          SizedBox(height: 80), // 위쪽 여백 추가
+                          SizedBox(height: 50), // 위쪽 여백 추가
 
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -597,7 +601,7 @@ class _filterscreenState extends State<filterscreen> {
                             ),
                           ),
 
-                          SizedBox(height: 80), // 위쪽 여백 추가
+                          SizedBox(height: 50), // 위쪽 여백 추가
 
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -614,7 +618,7 @@ class _filterscreenState extends State<filterscreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
+                          SizedBox(height: 15),
                           Row(
                             children: [
                               TextButton(
@@ -631,16 +635,17 @@ class _filterscreenState extends State<filterscreen> {
                                   });
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(15, 5, 15, 5)),
+                                  backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (date[0] == 1) ? Colors.grey.shade100 : Colors.transparent;
                                   }),
-                                  side: MaterialStateProperty.resolveWith<BorderSide>((states) {
+                                  side: WidgetStateProperty.resolveWith<BorderSide>((states) {
                                     return BorderSide(
                                       color: (date[0] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
                                       width: 0.8, // 테두리 두께
                                     );
                                   }),
-                                  foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (date[0] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
@@ -667,21 +672,22 @@ class _filterscreenState extends State<filterscreen> {
                                   });
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(15, 5, 15, 5)),
+                                  backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (date[1] == 1) ? Colors.grey.shade100 : Colors.transparent;
                                   }),
-                                  side: MaterialStateProperty.resolveWith<BorderSide>((states) {
+                                  side: WidgetStateProperty.resolveWith<BorderSide>((states) {
                                     return BorderSide(
                                       color: (date[1] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
                                       width: 0.8, // 테두리 두께
                                     );
                                   }),
-                                  foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (date[1] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
                                 child: Text(
-                                  '1 ~ 2일',
+                                  '2 ~ 3일',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
@@ -703,21 +709,22 @@ class _filterscreenState extends State<filterscreen> {
                                   });
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(15, 5, 15, 5)),
+                                  backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (date[2] == 1) ? Colors.grey.shade100 : Colors.transparent;
                                   }),
-                                  side: MaterialStateProperty.resolveWith<BorderSide>((states) {
+                                  side: WidgetStateProperty.resolveWith<BorderSide>((states) {
                                     return BorderSide(
                                       color: (date[2] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade500,
                                       width: 0.8, // 테두리 두께
                                     );
                                   }),
-                                  foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                                     return (date[2] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
                                 child: Text(
-                                  '4일 이상',
+                                  '3일 이상',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
@@ -727,7 +734,7 @@ class _filterscreenState extends State<filterscreen> {
                             ],
                           ),
 
-                          SizedBox(height: 80), // 위쪽 여백 추가
+                          SizedBox(height: 50), // 위쪽 여백 추가
 
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -847,7 +854,7 @@ class _filterscreenState extends State<filterscreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
+                          SizedBox(height: 16),
                           Container(
                               margin: EdgeInsets.only(left: 2.5, right: 1.2),
                               child: FlutterSlider(
@@ -916,7 +923,7 @@ class _filterscreenState extends State<filterscreen> {
               ],
             ),
             width: MediaQuery.of(context).size.width - 30,
-            height: 45.0, // 버튼의 높이
+            height: 55.0, // 버튼의 높이
             child: FloatingActionButton(
               onPressed: () {
                 SearchParameters[0].minPrice = _lowerValue.toInt();
@@ -944,7 +951,7 @@ class _filterscreenState extends State<filterscreen> {
               child: Text(
                 '조회하기',
                 style: TextStyle(
-                  fontSize: 13.5,
+                  fontSize: 15.5,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

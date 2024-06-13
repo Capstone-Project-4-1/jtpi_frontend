@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jtpi/home.dart';
-import 'package:jtpi/screens/bookmarkscreen.dart';
-import 'package:jtpi/screens/mainscreen.dart';
 import 'package:jtpi/screens/filterscreen.dart';
 import 'package:jtpi/screens/passinfoscreen.dart';
-import 'package:jtpi/models/passdetailinfo.dart';
-import 'package:intl/intl.dart'; // intl 패키지 임포트
 import 'package:jtpi/util/my_tab.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,8 +23,8 @@ class searchscreen extends StatefulWidget {
 
 class _searchscreenState extends State<searchscreen> {
   List<Widget> myTabs = [
-    MyTab(iconData: Icons.search, text: '검색'),
-    MyTab(iconData: Icons.star, text: '즐겨찾기'),
+    const MyTab(iconData: Icons.search, text: '검색'),
+    const MyTab(iconData: Icons.star_border, text: '즐겨찾기'),
   ];
   String _sortBy = '기본순';
   String? selectedValue = '기본순';
@@ -68,7 +64,7 @@ class _searchscreenState extends State<searchscreen> {
       'cityNames': SearchParameters[0].cityNames,
       'duration': SearchParameters[0].period,
       'minPrice': SearchParameters[0].minPrice == 0 ? 1 : SearchParameters[0].minPrice,
-      'maxPrice': SearchParameters[0].maxPrice,
+      'maxPrice': SearchParameters[0].maxPrice == 0 ? 50000 : SearchParameters[0].maxPrice,
     };
 
     List<PassSearchResult> allResults = [];
@@ -128,7 +124,7 @@ class _searchscreenState extends State<searchscreen> {
         _isFocused = _focusNode.hasFocus;
       });
     });
-    //if (widget.screennumber == 0) _focusNode.requestFocus();
+    if (widget.screennumber == 0) _focusNode.requestFocus();
     _textEditingController.addListener(_onSearchTextChanged);
     _searchText = widget.searchparameter.query.toLowerCase(); // 초기 검색어 설정
     if (widget.searchparameter.query == '0') _textEditingController.text = '';
@@ -147,21 +143,8 @@ class _searchscreenState extends State<searchscreen> {
     if (widget.searchparameter.query == '0') _searchText = '';
     _performSearch(); // 초기 검색 수행
     _getbookmark();
-    //printing();
   }
 
-  void printing() {
-/*    print('searchQuery: ${SearchParameters[0].query}');
-    print('departureCity: ${SearchParameters[0].departureCity}');
-    print('arrivalCity: ${SearchParameters[0].arrivalCity}');
-    print('transportType: ${SearchParameters[0].transportType}');
-    print('cityNames: ${SearchParameters[0].cityNames}');
-    print('period: ${SearchParameters[0].period}');
-    print('minPrice: ${SearchParameters[0].minPrice}');
-    print('maxPrice: ${SearchParameters[0].maxPrice}');
-    print('quantityAdults: ${SearchParameters[0].quantityAdults}');
-    print('quantityChildren: ${SearchParameters[0].quantityChildren}');*/
-  }
 
   @override
   void dispose() {
@@ -179,7 +162,6 @@ class _searchscreenState extends State<searchscreen> {
   Future<void> _performSearch() async {
     print('B');
     if (SearchParameters[0].query == '') {SearchParameters[0].query = '0'; print('C');}
-    printing();
     if (_searchText.isNotEmpty || widget.screennumber == 2) {
       print('D');
       List<PassSearchResult> results = await _search(_searchText);
@@ -191,25 +173,6 @@ class _searchscreenState extends State<searchscreen> {
         _filteredPassDetailInfo = [];
       });
     }
-  }
-
-  List<PassDetailInfo> _filterPassDetailInfo(String searchText) {
-    // 검색어에 따라 passdetailinfo 필터링 및 정렬
-    return passdetailinfo
-        .where((pass) => pass.title.toLowerCase().contains(searchText))
-        .toList()
-      ..sort((a, b) {
-        // 검색어에 따라 passdetailinfo 정렬
-        if (a.title.toLowerCase().contains(searchText) &&
-            !b.title.toLowerCase().contains(searchText)) {
-          return -1;
-        } else if (!a.title.toLowerCase().contains(searchText) &&
-            b.title.toLowerCase().contains(searchText)) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
   }
 
   void _handleTabSelection(int index) {
@@ -319,9 +282,9 @@ class _searchscreenState extends State<searchscreen> {
                         style: TextStyle(fontSize: 16, color: Colors.black),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(20, 10, 30, 10), // Text 위젯의 위치 조정
-                          hintText: _isFocused ? '' : "교통패스를 검색해주세요.",
-                          hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
-                          suffixIcon: Padding(
+                          hintText: _isFocused ? '' : "교통패스 검색",
+                          hintStyle: const TextStyle(fontSize: 15, color: Colors.grey),
+                          suffixIcon: const Padding(
                               padding: EdgeInsets.only(left: 8, right: 18, top: 2), // 아이콘의 왼쪽 여백 설정
                               child: Icon(
                                 Icons.search,
@@ -330,14 +293,14 @@ class _searchscreenState extends State<searchscreen> {
                               )
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Color.fromRGBO(244,244,244,1.0),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.9)),
+                            borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.0)),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.9)),
+                            borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.0)),
                           ),
                         ),
                         onSubmitted: (value) {
@@ -354,7 +317,6 @@ class _searchscreenState extends State<searchscreen> {
                           //_performSearch(); // 엔터키를 누르면 검색 수행
                           _getbookmark();
                           print('누름');
-                          printing();
                         },
                       ),
                     ),
@@ -456,10 +418,8 @@ class _searchscreenState extends State<searchscreen> {
                                   color: Colors.white,
                                 ),
                                 offset: const Offset(5, 0),
-                                scrollbarTheme: ScrollbarThemeData(
-                                  radius: const Radius.circular(40),
-                                  thickness: MaterialStateProperty.all<double>(6),
-                                  thumbVisibility: MaterialStateProperty.all<bool>(true),
+                                scrollbarTheme: const ScrollbarThemeData(
+                                  radius: Radius.circular(40)
                                 ),
                               ),
                               menuItemStyleData: const MenuItemStyleData(
@@ -474,7 +434,7 @@ class _searchscreenState extends State<searchscreen> {
                                 child: IconButton(
                                   padding: EdgeInsets.zero, // 패딩 설정
                                   constraints: BoxConstraints(),
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.tune_sharp,
                                     color: Color.fromRGBO(100,100,100, 1.0),
                                   ),
@@ -498,7 +458,7 @@ class _searchscreenState extends State<searchscreen> {
                     child: _isFocused ? Container() : Container(
                       width: MediaQuery.of(context).size.width,
                       color: Colors.white60,
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center, // 수직 방향 중앙 정렬
                         crossAxisAlignment: CrossAxisAlignment.center, // 수평 방향 중앙 정렬
                         children: [
@@ -560,6 +520,15 @@ class _searchscreenState extends State<searchscreen> {
                                     padding: const EdgeInsets.all(6),
                                     child: Container(
                                       decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.08), // 그림자 색상
+                                            spreadRadius: 2, // 그림자 퍼짐 반경
+                                            blurRadius: 3, // 그림자 흐림 정도
+                                            offset: Offset(0, 0), // 그림자 위치 (x, y)
+                                          ),
+                                        ],
                                         borderRadius: BorderRadius.circular(8.0),
                                       ),
                                       child: Column(
@@ -569,10 +538,10 @@ class _searchscreenState extends State<searchscreen> {
                                             Container(
                                               height: (MediaQuery.of(context).size.width - 48)/2,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8.0),
+                                                borderRadius: BorderRadius.circular(18.0),
                                                 image: DecorationImage(
-                                                  image: NetworkImage(imageURL), // 이미지 파일 경로 지정
-                                                  fit: BoxFit.cover, // 이미지를 카드에 맞게 채우도록 설정
+                                                  image: NetworkImage(imageURL),
+                                                  fit: BoxFit.fitWidth,
                                                 ),
                                               ),
                                               child: Row(
@@ -637,7 +606,7 @@ class _searchscreenState extends State<searchscreen> {
                                                                 softWrap: true,
                                                                 maxLines: 1,
                                                                 overflow: TextOverflow.ellipsis,
-                                                                style: TextStyle(
+                                                                style: const TextStyle(
                                                                   letterSpacing: -0.8,
                                                                   fontSize: 12,
                                                                   fontWeight: FontWeight.bold,
@@ -679,21 +648,6 @@ class _searchscreenState extends State<searchscreen> {
                         )
                     ),
                   ),
-                  /*Container(
-                decoration: BoxDecoration(
-                  color: Colors.white, // 배경색을 흰색으로 설정
-                  borderRadius: BorderRadius.circular(0), // 컨테이너의 모서리를 둥글게 만듦
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5), // 그림자 색상과 투명도 설정
-                      spreadRadius: 3, // 그림자 퍼짐 정도
-                      blurRadius: 2, // 그림자 흐림 정도
-                      offset: Offset(0, 3), // 그림자 위치 조정 (수평, 수직)
-                    ),
-                  ],
-                ),
-                child:               TabBar(tabs: myTabs, onTap: _handleTabSelection,),
-              ),*/
                 ],
               )
           )
