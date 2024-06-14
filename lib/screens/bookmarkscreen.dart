@@ -19,18 +19,13 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
   List<Bookmark> _filteredPassDetailInfo = [];
   String _sortBy = '기본순';
   String? selectedValue;
+  int _imageType = 0;
 
   @override
   void initState() {
     super.initState();
-    //_filteredPassDetailInfo = _filterBookmarkPassDetailInfo();
     _getbookmark();
   }
-
-  /*List<PassDetailInfo> _filterBookmarkPassDetailInfo() {
-    // 북마크된 항목만 필터링
-    return passdetailinfo.where((pass) => pass.bookmark == 1).toList();
-  }*/
 
   Future<void> _getbookmark() async {
     final SharedPreferences prefs = await _prefs;
@@ -147,9 +142,9 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
             crossAxisAlignment: CrossAxisAlignment.center, // 수평 방향 중앙 정렬
             children: [
               Icon(
-                Icons.star_border,
+                Icons.star_rounded,
                 size: 48,
-                color: Colors.deepPurple,
+                color: Colors.amber,
               ),
               SizedBox(height: 16), // 아이콘과 텍스트 사이의 간격 조절
               Text(
@@ -269,12 +264,18 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                       mainAxisExtent: (MediaQuery.of(context).size.width - 48)/2 + 95,
                     ),
                     itemBuilder: (context, index) {
+
                       int id = _filteredPassDetailInfo[index].passid;
                       String title = _filteredPassDetailInfo[index].title;
                       String price = _filteredPassDetailInfo[index].price;
                       String cityNames = _filteredPassDetailInfo[index].cityNames;
                       //int bookmark = _filteredPassDetailInfo[index].bookmark;
                       String imageURL = _filteredPassDetailInfo[index].imageURL;
+
+                      if (imageURL.contains("!@#")) {
+                        imageURL = imageURL.split('!@#')[0];
+                        _imageType = 5;
+                      };
 
                       return GestureDetector(
                           onTap: () {
@@ -286,7 +287,6 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                       passinfoscreen(passID: _filteredPassDetailInfo[index].passid),
                                 )
                             ).then((value) {
-                              print('ㄲ');
                               _getbookmark();
                               _handleSort(_sortBy);
                             });
@@ -304,10 +304,18 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                       Container(
                                         height: (MediaQuery.of(context).size.width - 48)/2,
                                         decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.08), // 그림자 색상
+                                              spreadRadius: 2, // 그림자 퍼짐 반경
+                                              blurRadius: 3, // 그림자 흐림 정도
+                                              offset: Offset(0, 0), // 그림자 위치 (x, y)
+                                            ),
+                                          ],
                                           borderRadius: BorderRadius.circular(8.0),
                                           image: DecorationImage(
-                                            image: NetworkImage(imageURL), // 이미지 파일 경로 지정
-                                            fit: BoxFit.cover, // 이미지를 카드에 맞게 채우도록 설정
+                                            image: NetworkImage(imageURL),
+                                            fit: _imageType == 5 ? BoxFit.cover : BoxFit.fitWidth, ///////// 사진 풍경일 때랑 로고 사진일 때랑
                                           ),
                                         ),
                                         child: Row(
@@ -315,10 +323,10 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
                                             IconButton(
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 /*bookmarked.contains(id.toString()) ? Icons.star : Icons.star_border,
                                                 color: bookmarked.contains(id.toString()) ? Colors.amber : Colors.white,*/
-                                                Icons.star,
+                                                Icons.star_rounded,
                                                 color: Colors.amber,
                                               ),
                                               iconSize: 40,

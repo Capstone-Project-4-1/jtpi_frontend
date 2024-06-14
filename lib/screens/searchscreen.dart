@@ -24,10 +24,12 @@ class searchscreen extends StatefulWidget {
 class _searchscreenState extends State<searchscreen> {
   List<Widget> myTabs = [
     const MyTab(iconData: Icons.search, text: '검색'),
-    const MyTab(iconData: Icons.star_border, text: '즐겨찾기'),
+    const MyTab(iconData: Icons.star_outline_rounded, text: '즐겨찾기'),
   ];
   String _sortBy = '기본순';
   String? selectedValue = '기본순';
+
+  int _imageType = 0;
 
   late TextEditingController _textEditingController;
   late FocusNode _focusNode;
@@ -140,9 +142,7 @@ class _searchscreenState extends State<searchscreen> {
     SearchParameters[0].quantityAdults = widget.searchparameter.quantityAdults;
     SearchParameters[0].quantityChildren = widget.searchparameter.quantityChildren;
 
-    if (widget.searchparameter.query == '0') _searchText = '';
-    _performSearch(); // 초기 검색 수행
-    _getbookmark();
+    if (widget.screennumber == 2) _handleSort('기본순');
   }
 
 
@@ -314,9 +314,7 @@ class _searchscreenState extends State<searchscreen> {
                           SearchParameters[0].quantityAdults = 0;
                           SearchParameters[0].quantityChildren = 0;
                           _handleSort('기본순');
-                          //_performSearch(); // 엔터키를 누르면 검색 수행
                           _getbookmark();
-                          print('누름');
                         },
                       ),
                     ),
@@ -419,7 +417,7 @@ class _searchscreenState extends State<searchscreen> {
                                 ),
                                 offset: const Offset(5, 0),
                                 scrollbarTheme: const ScrollbarThemeData(
-                                  radius: Radius.circular(40)
+                                    radius: Radius.circular(40)
                                 ),
                               ),
                               menuItemStyleData: const MenuItemStyleData(
@@ -500,6 +498,11 @@ class _searchscreenState extends State<searchscreen> {
                             String price = (_filteredPassDetailInfo[index].price).split(',')[0];
                             String cityNames = _filteredPassDetailInfo[index].routeInformation;
                             String imageURL = _filteredPassDetailInfo[index].imageURL;
+                            if (imageURL.contains("!@#")) {
+                              imageURL = imageURL.split('!@#')[0];
+                              _imageType = 5;
+                              print("사진주소가 올바를까요? $imageURL $_imageType");
+                            };
 
                             return GestureDetector(
                                 onTap: () {
@@ -509,11 +512,8 @@ class _searchscreenState extends State<searchscreen> {
                                       builder: (context) => passinfoscreen(passID: _filteredPassDetailInfo[index].passid),
                                     ),
                                   ).then((value) {
-                                    print(selectedValue);
-                                    //_performSearch();
                                     _getbookmark();
                                     _handleSort(selectedValue.toString());
-                                    //initState();
                                   });
                                 },
                                 child: Padding(
@@ -521,14 +521,6 @@ class _searchscreenState extends State<searchscreen> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.08), // 그림자 색상
-                                            spreadRadius: 2, // 그림자 퍼짐 반경
-                                            blurRadius: 3, // 그림자 흐림 정도
-                                            offset: Offset(0, 0), // 그림자 위치 (x, y)
-                                          ),
-                                        ],
                                         borderRadius: BorderRadius.circular(8.0),
                                       ),
                                       child: Column(
@@ -538,10 +530,18 @@ class _searchscreenState extends State<searchscreen> {
                                             Container(
                                               height: (MediaQuery.of(context).size.width - 48)/2,
                                               decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.08), // 그림자 색상
+                                                    spreadRadius: 2, // 그림자 퍼짐 반경
+                                                    blurRadius: 3, // 그림자 흐림 정도
+                                                    offset: Offset(0, 0), // 그림자 위치 (x, y)
+                                                  ),
+                                                ],
                                                 borderRadius: BorderRadius.circular(18.0),
                                                 image: DecorationImage(
                                                   image: NetworkImage(imageURL),
-                                                  fit: BoxFit.fitWidth,
+                                                  fit: _imageType == 5 ? BoxFit.cover : BoxFit.fitWidth,
                                                 ),
                                               ),
                                               child: Row(
@@ -550,7 +550,7 @@ class _searchscreenState extends State<searchscreen> {
                                                 children: [
                                                   IconButton(
                                                     icon: Icon(
-                                                      bookmarked.contains(id.toString()) ? Icons.star : Icons.star_border,
+                                                      bookmarked.contains(id.toString()) ? Icons.star_rounded : Icons.star_border_rounded,
                                                       color: bookmarked.contains(id.toString()) ? Colors.amber : Colors.white,
                                                     ),
                                                     iconSize: 40,

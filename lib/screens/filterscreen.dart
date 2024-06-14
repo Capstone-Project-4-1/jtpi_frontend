@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:jtpi/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,12 @@ class filterscreen extends StatefulWidget {
 class _filterscreenState extends State<filterscreen> {
   TextEditingController minpriceController = TextEditingController();
   TextEditingController maxpriceController = TextEditingController();
-  double _lowerValue = 0.0;
-  double _upperValue = 50000.0;
+  double _lowerValue = 400.0;
+  double _upperValue = 30000.0;
+
+  double _minprice = 400.0;
+  double _maxprice = 30000.0;
+
   final focus = FocusNode();
   final focus2 = FocusNode();
 
@@ -65,8 +70,8 @@ class _filterscreenState extends State<filterscreen> {
     SearchParameters[0].quantityAdults = 0;
     SearchParameters[0].quantityChildren = 0;
 
-    minpriceController.text = _lowerValue.toInt().toString();
-    maxpriceController.text = _upperValue.toInt().toString();
+    minpriceController.text = NumberFormat('#,###').format(double.parse(_lowerValue.toInt().toString()));
+    maxpriceController.text = NumberFormat('#,###').format(double.parse(_upperValue.toInt().toString()));
   }
 
   void swapText() {
@@ -332,9 +337,9 @@ class _filterscreenState extends State<filterscreen> {
                             ],
                           ),
 
-                          SizedBox(height: 50), // 위쪽 여백 추가
+                          const SizedBox(height: 50), // 위쪽 여백 추가
 
-                          Row(
+                          const Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(width: 2),
@@ -649,7 +654,7 @@ class _filterscreenState extends State<filterscreen> {
                                     return (date[0] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   '하루 (1일)',
                                   style: TextStyle(
                                     fontSize: 13,
@@ -657,7 +662,7 @@ class _filterscreenState extends State<filterscreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               TextButton(
                                 onPressed: () {
                                   if (SearchParameters[0].period == 2)
@@ -723,7 +728,7 @@ class _filterscreenState extends State<filterscreen> {
                                     return (date[2] == 1) ? Colors.blueGrey.shade800 : Colors.grey.shade700;
                                   }),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   '3일 이상',
                                   style: TextStyle(
                                     fontSize: 13,
@@ -734,9 +739,9 @@ class _filterscreenState extends State<filterscreen> {
                             ],
                           ),
 
-                          SizedBox(height: 50), // 위쪽 여백 추가
+                          const SizedBox(height: 50), // 위쪽 여백 추가
 
-                          Row(
+                          const Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -750,7 +755,7 @@ class _filterscreenState extends State<filterscreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Row(
                             children: [
                               Expanded(
@@ -762,20 +767,41 @@ class _filterscreenState extends State<filterscreen> {
                                       controller: minpriceController,
                                       onChanged: (text) {
                                         setState(() {
-                                          if(double.parse(text) >= double.parse(maxpriceController.text)) {
-                                            minpriceController.text = maxpriceController.text;
-                                            text = maxpriceController.text; }
+                                          minpriceController.text = minpriceController.text.replaceAll(',', '');
+                                          maxpriceController.text = maxpriceController.text.replaceAll(',', '');
+                                          text = text.replaceAll(',', '');
+
                                           _lowerValue = double.parse(text);
+                                          _maxprice = double.parse(maxpriceController.text.replaceAll(',', ''));
+
+                                          if(_lowerValue >= _maxprice) {
+                                            _lowerValue = _upperValue;}
+                                          if(_lowerValue < 400) {
+                                            _lowerValue = 400;}
+
                                           SearchParameters[0].minPrice = _lowerValue.toInt();
+
+                                          minpriceController.text = NumberFormat('#,###').format(double.parse(minpriceController.text));
+                                          maxpriceController.text = NumberFormat('#,###').format(double.parse(maxpriceController.text));
                                         });
                                       },
                                       onSubmitted: (text) {
                                         setState(() {
-                                          if(double.parse(text) >= double.parse(maxpriceController.text)) {
-                                            minpriceController.text = maxpriceController.text;
-                                            text = maxpriceController.text; }
+                                          minpriceController.text = minpriceController.text.replaceAll(',', '');
+                                          maxpriceController.text = maxpriceController.text.replaceAll(',', '');
+                                          text = text.replaceAll(',', '');
+
                                           _lowerValue = double.parse(text);
+                                          _maxprice = double.parse(maxpriceController.text.replaceAll(',', ''));
+
+                                          if(_lowerValue >= _maxprice) {
+                                            _lowerValue = _upperValue;}
+                                          if(_lowerValue < 400) {
+                                            _lowerValue = 400; minpriceController.text = '400';}
                                           SearchParameters[0].minPrice = _lowerValue.toInt();
+
+                                          minpriceController.text = NumberFormat('#,###').format(double.parse(minpriceController.text));
+                                          maxpriceController.text = NumberFormat('#,###').format(double.parse(maxpriceController.text));
                                         });
                                       },
                                       textAlign: TextAlign.right,
@@ -813,20 +839,39 @@ class _filterscreenState extends State<filterscreen> {
                                       controller: maxpriceController,
                                       onChanged: (text) {
                                         setState(() {
-                                          if(double.parse(text) <= double.parse(minpriceController.text)) {
-                                            maxpriceController.text = minpriceController.text;
-                                            text = minpriceController.text; }
+                                          minpriceController.text = minpriceController.text.replaceAll(',', '');
+                                          maxpriceController.text = maxpriceController.text.replaceAll(',', '');
+                                          text = text.replaceAll(',', '');
+                                          _minprice = double.parse(minpriceController.text.replaceAll(',', ''));
+
                                           _upperValue = double.parse(text);
+                                          if(_upperValue <= _minprice) {
+                                            _upperValue = _lowerValue; }
+                                          if(_upperValue > 30000) {
+                                            _upperValue = 30000;}
                                           SearchParameters[0].maxPrice = _upperValue.toInt();
+
+                                          minpriceController.text = NumberFormat('#,###').format(double.parse(minpriceController.text));
+                                          maxpriceController.text = NumberFormat('#,###').format(double.parse(maxpriceController.text));
                                         });
                                       },
                                       onSubmitted: (text) {
                                         setState(() {
+                                          minpriceController.text = minpriceController.text.replaceAll(',', '');
+                                          maxpriceController.text = maxpriceController.text.replaceAll(',', '');
+                                          text = text.replaceAll(',', '');
+
                                           if(double.parse(text) <= double.parse(minpriceController.text)) {
                                             maxpriceController.text = minpriceController.text;
                                             text = minpriceController.text; }
                                           _upperValue = double.parse(text);
+                                          if(_upperValue > 30000) {
+                                            _upperValue = 30000; maxpriceController.text = '30000';}
+
                                           SearchParameters[0].maxPrice = _upperValue.toInt();
+
+                                          minpriceController.text = NumberFormat('#,###').format(double.parse(minpriceController.text));
+                                          maxpriceController.text = NumberFormat('#,###').format(double.parse(maxpriceController.text));
                                         });
                                       },
                                       textAlign: TextAlign.right,
@@ -859,8 +904,8 @@ class _filterscreenState extends State<filterscreen> {
                               margin: EdgeInsets.only(left: 2.5, right: 1.2),
                               child: FlutterSlider(
                                 values: [_lowerValue, _upperValue],
-                                min: 0,
-                                max: 50000,
+                                min: 400,
+                                max: 30000,
                                 touchSize: 5,
                                 step: FlutterSliderStep(step: 10),
                                 rangeSlider: true,
@@ -874,11 +919,6 @@ class _filterscreenState extends State<filterscreen> {
                                 ),
                                 handlerWidth: 25,
                                 handler: FlutterSliderHandler(
-                                  /*decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.blue, width: 1),
-                      ),*/
                                   child: Icon(Icons.circle, color: Colors.transparent),
                                 ),
                                 rightHandler: FlutterSliderHandler(
@@ -889,22 +929,21 @@ class _filterscreenState extends State<filterscreen> {
                                   ),
                                   child: Icon(Icons.circle, color: Colors.transparent),
                                 ),
-                                handlerAnimation: FlutterSliderHandlerAnimation(
+                                handlerAnimation: const FlutterSliderHandlerAnimation(
                                     duration: Duration(milliseconds: 700),
                                     scale: 1.1),
                                 onDragging: (handlerIndex, lowerValue, upperValue) {
                                   setState(() {
                                     _lowerValue = lowerValue;
                                     _upperValue = upperValue;
-                                    minpriceController.text = lowerValue.toInt().toString();
-                                    maxpriceController.text = upperValue.toInt().toString();
+                                    minpriceController.text = NumberFormat('#,###').format(double.parse(lowerValue.toInt().toString()));
+                                    maxpriceController.text = NumberFormat('#,###').format(double.parse(upperValue.toInt().toString()));
                                   });
                                 },
                               )
                           ),
 
-                          SizedBox(height: 80), // 위쪽 여백 추가
-
+                          const SizedBox(height: 85), // 위쪽 여백 추가
                         ],
                       ),
                     ),
@@ -931,16 +970,6 @@ class _filterscreenState extends State<filterscreen> {
                 if(SearchParameters[0] == []) {
                   Navigator.pop(context);
                 } else {
-                  print('query: ${SearchParameters[0].query}');
-                  print('departureCity: ${SearchParameters[0].departureCity}');
-                  print('arrivalCity: ${SearchParameters[0].arrivalCity}');
-                  print('transportType: ${SearchParameters[0].transportType}');
-                  print('cityNames: ${SearchParameters[0].cityNames}');
-                  print('period: ${SearchParameters[0].period}');
-                  print('minPrice: ${SearchParameters[0].minPrice}');
-                  print('maxPrice: ${SearchParameters[0].maxPrice}');
-                  print('quantityAdults: ${SearchParameters[0].quantityAdults}');
-                  print('quantityChildren: ${SearchParameters[0].quantityChildren}');
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) =>
@@ -948,18 +977,18 @@ class _filterscreenState extends State<filterscreen> {
                   );
                 }
               },
-              child: Text(
+              backgroundColor: Color.fromRGBO(0, 51, 102, 1.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0), // 원하는 테두리 모양을 적용할 수 있습니다.
+                // 더 각진 테두리를 원하면 BorderRadius.circular()의 값 조절
+              ),
+              child: const Text(
                 '조회하기',
                 style: TextStyle(
                   fontSize: 15.5,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
-              ),
-              backgroundColor: Color.fromRGBO(0, 51, 102, 1.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0), // 원하는 테두리 모양을 적용할 수 있습니다.
-                // 더 각진 테두리를 원하면 BorderRadius.circular()의 값 조절
               ),
             ),
           ),

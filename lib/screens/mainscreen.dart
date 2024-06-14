@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jtpi/models/searchparameters.dart';
@@ -215,118 +216,118 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                       ),
                       SizedBox(height: 10),
                       Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30.0),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.03), // 그림자 색상
-                              spreadRadius: 5, // 그림자 퍼짐 반경
-                              blurRadius: 3, // 그림자 흐림 정도
-                              offset: Offset(0, 0), // 그림자 위치 (x, y)
-                            ),
-                          ],
-                        ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03), // 그림자 색상
+                                spreadRadius: 5, // 그림자 퍼짐 반경
+                                blurRadius: 3, // 그림자 흐림 정도
+                                offset: Offset(0, 0), // 그림자 위치 (x, y)
+                              ),
+                            ],
+                          ),
                           child: Padding(
                               padding: EdgeInsets.all(15),
                               child: Column(
-                      children: [
-                        Container(
-                          //height: 60,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
-                            //color: Colors.white,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(0),
-                                  child: TextField(
-                                    focusNode: _focusNode,
-                                    controller: _textEditingController,
-                                    onChanged: onSearchTextChanged,
-                                    onSubmitted: (text) {
-                                      onSearchTextChanged(text);
-                                      goToSearchScreen();
-                                    },
-                                    style: TextStyle(fontSize: 16, color: Colors.black),
-                                    decoration: InputDecoration(
-                                      hintText: "교통패스 검색",
-                                      hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                                      prefixIcon: Padding(
-                                        padding: EdgeInsets.only(left: 18, right: 8, top: 2), // 아이콘의 왼쪽 여백 설정
-                                        child: Icon(
-                                          Icons.search,
-                                          color: Color.fromRGBO(50,50,70, 0.8),
-                                          size: 25,
+                                children: [
+                                  Container(
+                                    //height: 60,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(18),
+                                        //color: Colors.white,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(0),
+                                              child: TextField(
+                                                focusNode: _focusNode,
+                                                controller: _textEditingController,
+                                                onChanged: onSearchTextChanged,
+                                                onSubmitted: (text) {
+                                                  onSearchTextChanged(text);
+                                                  goToSearchScreen();
+                                                },
+                                                style: TextStyle(fontSize: 16, color: Colors.black),
+                                                decoration: InputDecoration(
+                                                  hintText: "교통패스 검색",
+                                                  hintStyle: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                                                  prefixIcon: Padding(
+                                                    padding: EdgeInsets.only(left: 18, right: 8, top: 2), // 아이콘의 왼쪽 여백 설정
+                                                    child: Icon(
+                                                      Icons.search,
+                                                      color: Color.fromRGBO(50,50,70, 0.8),
+                                                      size: 25,
+                                                    ),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Color.fromRGBO(244,244,244, 1.0),
+                                                  enabledBorder: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(18),
+                                                    borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.0)),
+                                                  ),
+                                                  focusedBorder: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(18),
+                                                    borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.0)),
+                                                  ),
+                                                  contentPadding: EdgeInsets.symmetric(vertical: 10), // Text 위젯의 위치 조정
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                  ),
+                                  SizedBox(height: 15),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '교통패스 이름을 모르시나요?',
+                                          style: TextStyle(
+                                            fontSize: 13.5,
+                                            color: Colors.grey[600],
+                                          ),
                                         ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Color.fromRGBO(244,244,244, 1.0),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(18),
-                                        borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.0)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(18),
-                                        borderSide: BorderSide(width: 1.7, color: Color.fromRGBO(20, 71, 140, 0.0)),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(vertical: 10), // Text 위젯의 위치 조정
+                                        SizedBox(height : 5),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => filterscreen(searchText: '', screennumber: 0,)),
+                                              );
+                                            },
+                                            style: TextButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              minimumSize: Size(50, 30),
+                                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  '조건으로 검색하기',
+                                                  style: TextStyle(
+                                                    //decoration: TextDecoration.underline,
+                                                    fontSize: 13.5,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                Container(height: 1.5, width: 111, color: Colors.grey.shade400),
+                                              ],
+                                            )
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ),
-                            ],
+                                ],
+                              )
                           )
-                        ),
-                        SizedBox(height: 15),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '교통패스 이름을 모르시나요?',
-                                style: TextStyle(
-                                  fontSize: 13.5,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              SizedBox(height : 5),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => filterscreen(searchText: '', screennumber: 0,)),
-                                    );
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size(50, 30),
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        '조건으로 검색하기',
-                                        style: TextStyle(
-                                          //decoration: TextDecoration.underline,
-                                          fontSize: 13.5,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                      Container(height: 1.5, width: 111, color: Colors.grey.shade400),
-                                    ],
-                                  )
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                      )
                       ),
 
 
@@ -339,301 +340,301 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
 
 
                                 Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  //Icon(Icons.thumb_up_outlined, size: 19,),
-                                  SizedBox(width: 3),
-                                  Text(' 신규 패스', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                              SizedBox(height: 14),
-                              Container(
-                                height: 160,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    //Icon(Icons.thumb_up_outlined, size: 19,),
+                                    SizedBox(width: 3),
+                                    Text(' 신규 패스', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                  ],
                                 ),
-                                child: PageView.builder(
-                                  itemCount: newpasslist.length,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => passinfoscreen(passID: newpasslist[index].passid),
-                                          ),
-                                        );
-                                      },
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(0),
-                                              color: Colors.grey,
-                                              image: DecorationImage(
-                                                image: NetworkImage(newpasslist[index].imageURL),
-                                                fit: BoxFit.cover,
-                                                colorFilter: ColorFilter.mode(
-                                                  Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
-                                                  BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
-                                                ),
-                                              ),
-                                            ),
-                                            width: double.infinity,
-                                            child: Align(
-                                              alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10.0),
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'NEW !!',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 19,
-                                                        fontWeight: FontWeight.w600,
-                                                        shadows: [
-                                                          Shadow(
-                                                            color: Colors.grey.shade900,
-                                                            offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
-                                                            blurRadius: 5,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: 230,
-                                                      child: Text(
-                                                        newpasslist[index].title,
-                                                        softWrap: true,
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 19,
-                                                          fontWeight: FontWeight.w800,
-                                                          shadows: [
-                                                            Shadow(
-                                                              color: Colors.grey.shade400,
-                                                              offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
-                                                              blurRadius: 5, // 그림자 흐림 정도
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child: Container(
-                                                width: 40,
-                                                padding: EdgeInsets.fromLTRB(8,3,8,3),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black54,
-                                                  borderRadius: BorderRadius.circular(30),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    '${index + 1}/${newpasslist.length}', // 현재 페이지 / 전체 페이지 수
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 11.5,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                )
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 10,
-                                            right: 10,
-                                            child: Container(
-                                                width: 90,
-                                                padding: EdgeInsets.all(5),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.circular(40),
-                                                ),
-                                                child: Padding(
-                                                    padding: EdgeInsets.fromLTRB(5,0,2,0),
-                                                    child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '보러가기 ', // 현재 페이지 / 전체 페이지 수
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 11.5,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                          Icon(
-                                                            Icons.arrow_forward,
-                                                            color: Colors.black,
-                                                            size: 13,
-                                                          ),
-                                                        ]
-                                                    )
-                                                )
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: 35),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  //Icon(Icons.thumb_up_outlined, size: 20,),
-                                  SizedBox(width: 3),
-                                  Text(' JTPI 추천 패스', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                ],
-                              ),
                                 SizedBox(height: 14),
                                 Container(
                                   height: 160,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                child: PageView.builder(
-                                  itemCount: recommendpasslist.length,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => passinfoscreen(passID: recommendpasslist[index].passid),
-                                          ),
-                                        );
-                                      },
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(0),
-                                              color: Colors.grey,
-                                              image: DecorationImage(
-                                                image: NetworkImage(recommendpasslist[index].imageURL),
-                                                fit: BoxFit.cover,
-                                                colorFilter: ColorFilter.mode(
-                                                  Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
-                                                  BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
+                                  child: PageView.builder(
+                                    itemCount: newpasslist.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => passinfoscreen(passID: newpasslist[index].passid),
+                                            ),
+                                          );
+                                        },
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(0),
+                                                color: Colors.grey,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(newpasslist[index].imageURL),
+                                                  fit: BoxFit.cover,
+                                                  colorFilter: ColorFilter.mode(
+                                                    Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
+                                                    BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            width: double.infinity,
-                                            child: Align(
-                                              alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10.0),
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: 230,
-                                                      child: Text(
-                                                        recommendpasslist[index].title,
-                                                        softWrap: true,
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
+                                              width: double.infinity,
+                                              child: Align(
+                                                alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        'NEW !!',
                                                         style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 19,
-                                                          fontWeight: FontWeight.w800,
+                                                          fontWeight: FontWeight.w600,
                                                           shadows: [
                                                             Shadow(
-                                                              color: Colors.grey.shade400,
+                                                              color: Colors.grey.shade900,
                                                               offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
-                                                              blurRadius: 5, // 그림자 흐림 정도
+                                                              blurRadius: 5,
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                      Container(
+                                                        width: 230,
+                                                        child: Text(
+                                                          newpasslist[index].title,
+                                                          softWrap: true,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 19,
+                                                            fontWeight: FontWeight.w800,
+                                                            shadows: [
+                                                              Shadow(
+                                                                color: Colors.grey.shade400,
+                                                                offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
+                                                                blurRadius: 5, // 그림자 흐림 정도
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child: Container(
-                                                width: 40,
-                                                padding: EdgeInsets.fromLTRB(8,3,8,3),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black54,
-                                                  borderRadius: BorderRadius.circular(30),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    '${index + 1}/${recommendpasslist.length}', // 현재 페이지 / 전체 페이지 수
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 11.5,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
+                                            Positioned(
+                                              top: 10,
+                                              right: 10,
+                                              child: Container(
+                                                  width: 40,
+                                                  padding: EdgeInsets.fromLTRB(8,3,8,3),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black54,
+                                                    borderRadius: BorderRadius.circular(30),
                                                   ),
-                                                )
+                                                  child: Center(
+                                                    child: Text(
+                                                      '${index + 1}/${newpasslist.length}', // 현재 페이지 / 전체 페이지 수
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 11.5,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  )
+                                              ),
                                             ),
-                                          ),
-                                          Positioned(
-                                            bottom: 10,
-                                            right: 10,
-                                            child: Container(
-                                                width: 90,
-                                                padding: EdgeInsets.all(5),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.circular(40),
-                                                ),
-                                                child: Padding(
-                                                    padding: EdgeInsets.fromLTRB(5,0,2,0),
-                                                    child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '보러가기 ', // 현재 페이지 / 전체 페이지 수
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 11.5,
-                                                              fontWeight: FontWeight.bold,
+                                            Positioned(
+                                              bottom: 10,
+                                              right: 10,
+                                              child: Container(
+                                                  width: 90,
+                                                  padding: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius.circular(40),
+                                                  ),
+                                                  child: Padding(
+                                                      padding: EdgeInsets.fromLTRB(5,0,2,0),
+                                                      child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Text(
+                                                              '보러가기 ', // 현재 페이지 / 전체 페이지 수
+                                                              style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontSize: 11.5,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          Icon(
-                                                            Icons.arrow_forward,
-                                                            color: Colors.black,
-                                                            size: 13,
-                                                          ),
-                                                        ]
-                                                    )
-                                                )
+                                                            Icon(
+                                                              Icons.arrow_forward,
+                                                              color: Colors.black,
+                                                              size: 13,
+                                                            ),
+                                                          ]
+                                                      )
+                                                  )
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
+                                SizedBox(height: 35),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    //Icon(Icons.thumb_up_outlined, size: 20,),
+                                    SizedBox(width: 3),
+                                    Text(' JTPI 추천 패스', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                                SizedBox(height: 14),
+                                Container(
+                                  height: 160,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: PageView.builder(
+                                    itemCount: recommendpasslist.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => passinfoscreen(passID: recommendpasslist[index].passid),
+                                            ),
+                                          );
+                                        },
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(0),
+                                                color: Colors.grey,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(recommendpasslist[index].imageURL),
+                                                  fit: BoxFit.cover,
+                                                  colorFilter: ColorFilter.mode(
+                                                    Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
+                                                    BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
+                                                  ),
+                                                ),
+                                              ),
+                                              width: double.infinity,
+                                              child: Align(
+                                                alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        width: 230,
+                                                        child: Text(
+                                                          recommendpasslist[index].title,
+                                                          softWrap: true,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 19,
+                                                            fontWeight: FontWeight.w800,
+                                                            shadows: [
+                                                              Shadow(
+                                                                color: Colors.grey.shade400,
+                                                                offset: Offset(0, 0), // 그림자 위치 (수평, 수직)
+                                                                blurRadius: 5, // 그림자 흐림 정도
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: 10,
+                                              right: 10,
+                                              child: Container(
+                                                  width: 40,
+                                                  padding: EdgeInsets.fromLTRB(8,3,8,3),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black54,
+                                                    borderRadius: BorderRadius.circular(30),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      '${index + 1}/${recommendpasslist.length}', // 현재 페이지 / 전체 페이지 수
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 11.5,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  )
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 10,
+                                              right: 10,
+                                              child: Container(
+                                                  width: 90,
+                                                  padding: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius.circular(40),
+                                                  ),
+                                                  child: Padding(
+                                                      padding: EdgeInsets.fromLTRB(5,0,2,0),
+                                                      child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Text(
+                                                              '보러가기 ', // 현재 페이지 / 전체 페이지 수
+                                                              style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontSize: 11.5,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                            Icon(
+                                                              Icons.arrow_forward,
+                                                              color: Colors.black,
+                                                              size: 13,
+                                                            ),
+                                                          ]
+                                                      )
+                                                  )
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
 
 
                               ]
@@ -645,6 +646,44 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
               )
           )
       ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.shade50,
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, -3)
+            ),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width - 30,
+        height: 55.0, // 버튼의 높이
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => passinfoscreen(passID: 0),
+              ),
+            );
+          },
+          child: Text(
+            '조회하기',
+            style: TextStyle(
+              fontSize: 15.5,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Color.fromRGBO(0, 51, 102, 1.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0), // 원하는 테두리 모양을 적용할 수 있습니다.
+            // 더 각진 테두리를 원하면 BorderRadius.circular()의 값 조절
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
