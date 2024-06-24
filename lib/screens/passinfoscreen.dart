@@ -47,6 +47,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
   double screenHeight = 0.0;
   double screenWidth = 150.0;
   String siteUrl = "";
+  String imageURL = ""; int _imageType = 0;
 
   final GlobalKey _rootKey = GlobalKey();
   final GlobalKey _descriptionKey = GlobalKey();
@@ -73,7 +74,6 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
       print('Error fetching hello message: $e');
       return passDetailInfo;
     }
-
   }
 
   void _passdetailinfo() async {
@@ -89,6 +89,11 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
           siteUrl = passDetailInfo[0].benefit_information.split('!@#')[1];
           passDetailInfo[0].benefit_information = passDetailInfo[0].benefit_information.split('!@#')[0];
         }
+        imageURL = passDetailInfo[0].imageURL;
+        if (imageURL.contains("!@#")) {
+          imageURL = imageURL.split('!@#')[0];
+          _imageType = 5;
+        };
       });
     } catch (e) {
       print('Error: $e');
@@ -150,7 +155,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
         });
       }
 
-      double h = AppBar().preferredSize.height + kTextTabBarHeight + 2; //50 + 50 -2 = 98
+      double h = AppBar().preferredSize.height + kTextTabBarHeight + 50; //50 + 50 -2 = 98
 
       double benefitPosition = _getPosition(_benefitKey) ?? double.infinity; //150
       double reservationPosition = _getPosition(_reservationKey) ?? double.infinity;
@@ -192,6 +197,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
   void _scrollToIndex(int index) {
     RenderBox renderBox;
     Offset position;
+    int h = -35;
     switch (index) {
       case 0:
         renderBox = _descriptionKey.currentContext!.findRenderObject() as RenderBox;
@@ -200,7 +206,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
         _scrollController.animateTo(
           _scrollController.offset + position.dy -
               AppBar().preferredSize.height -
-              (_showTabBar ? kTextTabBarHeight : 0),
+              (_showTabBar ? kTextTabBarHeight : 0) + h,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
@@ -212,7 +218,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
         _scrollController.animateTo(
           _scrollController.offset + position.dy -
               AppBar().preferredSize.height -
-              (_showTabBar ? kTextTabBarHeight : 0),
+              (_showTabBar ? kTextTabBarHeight : 0) + h,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
@@ -224,7 +230,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
         _scrollController.animateTo(
           _scrollController.offset + position.dy -
               AppBar().preferredSize.height -
-              (_showTabBar ? kTextTabBarHeight : 0),
+              (_showTabBar ? kTextTabBarHeight : 0) + h,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
@@ -236,14 +242,19 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
         _scrollController.animateTo(
           _scrollController.offset + position.dy -
               AppBar().preferredSize.height -
-              (_showTabBar ? kTextTabBarHeight : 0),
+              (_showTabBar ? kTextTabBarHeight : 0) + h,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
         break;
       case 4:
+        renderBox = _refundKey.currentContext!.findRenderObject() as RenderBox;
+        position = renderBox.localToGlobal(
+            Offset.zero, ancestor: _rootKey.currentContext!.findRenderObject());
         _scrollController.animateTo(
-          MediaQuery.of(context).size.height,
+          _scrollController.offset + position.dy -
+              AppBar().preferredSize.height -
+              (_showTabBar ? kTextTabBarHeight : 0) + h + 150,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
@@ -257,11 +268,11 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
         break;
       default:
         if (_scrollController.position.pixels == 0)
-        _scrollController.animateTo(
-          1,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
+          _scrollController.animateTo(
+            1,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
         break;
     }
   }
@@ -331,13 +342,14 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                       children: [
                         Center(
                             child: Image.network(
-                              passDetailInfo[0].imageURL,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
+                              imageURL,
+                              fit: _imageType == 5 ? BoxFit.cover : BoxFit.fitWidth,
+                              height: 300,
+                              width: MediaQuery.of(context).size.width,
                               errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                                 return Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: const Text('No Image', style: TextStyle(fontSize: 25)),
+                                  padding: EdgeInsets.all(10),
+                                  child: const Text('No Image', style: TextStyle(fontSize: 25)),
                                 );
                               },
                             )
@@ -433,14 +445,14 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                                 borderRadius: BorderRadius.circular(4),
                                 color: Color.fromRGBO(243, 243, 243, 0.95),
                               ),
-                              width: 120,
-                              height: 30,
+                              width: 100,
+                              height: 25,
                               child: Center(
                                 child: Text(
-                                  ' ' + passDetailInfo[0].transportType,
+                                  '' + passDetailInfo[0].transportType,
                                   style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 0.4),
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -448,7 +460,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 12),
                         Row(
                           children: [
                             SizedBox(width: 3),
@@ -778,6 +790,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
                           padding: const EdgeInsets.fromLTRB(5, 15, 5, 40),
                           child: Text('${passDetailInfo[0].refund_information}'),
                         ),
+                        SizedBox(height: 40,)
                       ],
                     ),
                   ),

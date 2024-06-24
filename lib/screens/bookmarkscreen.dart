@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jtpi/screens/passinfoscreen.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -304,9 +305,10 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                       Container(
                                         height: (MediaQuery.of(context).size.width - 48)/2,
                                         decoration: BoxDecoration(
+                                          color: Colors.white,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.08), // 그림자 색상
+                                              color: Colors.black.withOpacity(0.03), // 그림자 색상
                                               spreadRadius: 2, // 그림자 퍼짐 반경
                                               blurRadius: 3, // 그림자 흐림 정도
                                               offset: Offset(0, 0), // 그림자 위치 (x, y)
@@ -323,11 +325,12 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
                                             IconButton(
-                                              icon: const Icon(
+                                              icon: Icon(
                                                 /*bookmarked.contains(id.toString()) ? Icons.star : Icons.star_border,
                                                 color: bookmarked.contains(id.toString()) ? Colors.amber : Colors.white,*/
                                                 Icons.star_rounded,
                                                 color: Colors.amber,
+                                                shadows: <Shadow>[Shadow(color: Colors.grey.shade500 , blurRadius: 2.0)],
                                               ),
                                               iconSize: 40,
                                               onPressed: () {
@@ -394,7 +397,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
                                             ),
                                             const SizedBox(height: 2),
                                             Text(
-                                              '${price.split(',')[0]} 엔',
+                                              NumberFormat('#,###').format(double.parse(price.split(',')[0])) + ' 엔',
                                               softWrap: true,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,

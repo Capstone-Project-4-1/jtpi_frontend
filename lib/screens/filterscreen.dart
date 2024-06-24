@@ -141,7 +141,7 @@ class _filterscreenState extends State<filterscreen> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) =>
-                        searchscreen(searchparameter: SearchParameters[0], screennumber: 2,)),
+                        searchscreen(searchparameter: SearchParameters[0], screennumber: 3,)),
                   );
                 } else {
                   Navigator.pushReplacement(
@@ -739,7 +739,7 @@ class _filterscreenState extends State<filterscreen> {
                             ],
                           ),
 
-                          const SizedBox(height: 50), // 위쪽 여백 추가
+                          const SizedBox(height: 20), // 위쪽 여백 추가
 
                           const Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -943,7 +943,7 @@ class _filterscreenState extends State<filterscreen> {
                               )
                           ),
 
-                          const SizedBox(height: 85), // 위쪽 여백 추가
+                          const SizedBox(height: 105), // 위쪽 여백 추가
                         ],
                       ),
                     ),
@@ -951,48 +951,63 @@ class _filterscreenState extends State<filterscreen> {
               )
           ),
           floatingActionButton: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.shade50,
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: Offset(0, -3)
-                ),
-              ],
-            ),
-            width: MediaQuery.of(context).size.width - 30,
-            height: 55.0, // 버튼의 높이
-            child: FloatingActionButton(
-              onPressed: () {
-                SearchParameters[0].minPrice = _lowerValue.toInt();
-                SearchParameters[0].maxPrice = _upperValue.toInt();
-                if(SearchParameters[0] == []) {
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) =>
-                        searchscreen(searchparameter: SearchParameters[0], screennumber: 2,)),
-                  );
-                }
-              },
-              backgroundColor: Color.fromRGBO(0, 51, 102, 1.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0), // 원하는 테두리 모양을 적용할 수 있습니다.
-                // 더 각진 테두리를 원하면 BorderRadius.circular()의 값 조절
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: 0,
+                      blurRadius: 5,
+                      offset: Offset(0, 20)
+                  ),
+                ],
               ),
-              child: const Text(
-                '조회하기',
-                style: TextStyle(
-                  fontSize: 15.5,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+              height: 70,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade50,
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: Offset(0, -3)
+                    ),
+                  ],
                 ),
-              ),
-            ),
+                width: MediaQuery.of(context).size.width - 30,
+                height: 55.0, // 버튼의 높이
+                child: FloatingActionButton(
+                  onPressed: () {
+                    SearchParameters[0].minPrice = _lowerValue.toInt();
+                    SearchParameters[0].maxPrice = _upperValue.toInt();
+                    if(SearchParameters[0] == []) {
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) =>
+                            searchscreen(searchparameter: SearchParameters[0], screennumber: 2,)),
+                      );
+                    }
+                  },
+                  backgroundColor: Color.fromRGBO(0, 51, 102, 1.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0), // 원하는 테두리 모양을 적용할 수 있습니다.
+                    // 더 각진 테두리를 원하면 BorderRadius.circular()의 값 조절
+                  ),
+                  child: const Text(
+                    '조회하기',
+                    style: TextStyle(
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              )
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         )
     );
   }

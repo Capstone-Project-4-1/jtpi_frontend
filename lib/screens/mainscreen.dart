@@ -9,9 +9,7 @@ import 'package:jtpi/screens/filterscreen.dart';
 import 'package:jtpi/screens/passinfoscreen.dart';
 import 'package:jtpi/models/passdetailinfo.dart';
 import 'package:jtpi/models/passpreview.dart';
-import 'package:jtpi/models/bookmark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:container_tab_indicator/container_tab_indicator.dart';
 import 'package:provider/provider.dart';
 
 
@@ -25,7 +23,6 @@ class mainscreen extends StatefulWidget {
 class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateMixin {
   final FocusNode _focusNode = FocusNode();
   late TabController _tabController;
-  int _passindex = 0;
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<String> bookmarked = [];
@@ -50,7 +47,6 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
     final SharedPreferences prefs = await _prefs;
     bookmarked = prefs.getStringList('bookmarked') ?? [];
     setState(() {
-      //bookmarked = ['1','2','3','4'];
       prefs.setStringList('bookmarked', bookmarked);
     });
   }
@@ -134,51 +130,11 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
       context,
       MaterialPageRoute(builder: (context) => searchscreen(searchparameter: _searchparameter[0], screennumber: 0,)),
     );
-    /*Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => searchscreen(searchparameter: _searchparameter[0])),
-    ).then((value) {
-      // FilterScreen에서 돌아온 후 실행할 작업
-      // FilterScreen에서 전달된 값(value)을 확인하고 필요한 로직을 수행
-      setState(() {
-        _textEditingController.clear();
-      });
-    });*/
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(253, 253, 254, 1.0),
-      /*appBar: AppBar(
-            backgroundColor: Color.fromRGBO(253, 253, 254, 1.0),
-            foregroundColor: Color.fromRGBO(253, 253, 254, 1.0),
-            surfaceTintColor: Color.fromRGBO(253, 253, 254, 1.0),
-            elevation: 0,
-            toolbarHeight: 115.0,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                SizedBox(height: 55,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 56,
-                      child: Image.asset('assets/logo1.png'),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      height: 48,
-                      child: Image.asset('assets/logo2.png'),
-                    ),
-                    const SizedBox(width: 6),
-                  ],
-                ),
-              ],
-            )
-        ),*/
       body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () { _focusNode.unfocus();},
@@ -193,7 +149,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          SizedBox(height: 55,),
+                          SizedBox(height: 70,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,7 +167,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                               const SizedBox(width: 6),
                             ],
                           ),
-                          SizedBox(height: 25),
+                          SizedBox(height: 10),
                         ],
                       ),
                       SizedBox(height: 10),
@@ -310,7 +266,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                             child: Column(
                                               children: [
                                                 Text(
-                                                  '조건으로 검색하기',
+                                                  ' 조건으로 검색하기 ',
                                                   style: TextStyle(
                                                     //decoration: TextDecoration.underline,
                                                     fontSize: 13.5,
@@ -318,7 +274,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                                     color: Colors.grey[600],
                                                   ),
                                                 ),
-                                                Container(height: 1.5, width: 111, color: Colors.grey.shade400),
+                                                Container(height: 1.5, width: 100, color: Colors.grey.shade400),
                                               ],
                                             )
                                         ),
@@ -357,6 +313,10 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                   child: PageView.builder(
                                     itemCount: newpasslist.length,
                                     itemBuilder: (context, index) {
+                                      String imageURL = newpasslist[index].imageURL;
+                                      if (imageURL.contains("!@#")) {
+                                        imageURL = imageURL.split('!@#')[0];
+                                      };
                                       return GestureDetector(
                                         onTap: () {
                                           // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
@@ -371,22 +331,22 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(0),
+                                                borderRadius: BorderRadius.circular(20),
                                                 color: Colors.grey,
                                                 image: DecorationImage(
-                                                  image: NetworkImage(newpasslist[index].imageURL),
+                                                  image: NetworkImage(imageURL),
                                                   fit: BoxFit.cover,
                                                   colorFilter: ColorFilter.mode(
-                                                    Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
+                                                    Colors.black.withOpacity(0.3), // 어둡게 만들기 위한 색상 및 투명도 설정
                                                     BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
                                                   ),
                                                 ),
                                               ),
                                               width: double.infinity,
                                               child: Align(
-                                                alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
+                                                alignment: Alignment.topLeft, // 왼쪽 하단으로 정렬
                                                 child: Padding(
-                                                  padding: EdgeInsets.all(10.0),
+                                                  padding: EdgeInsets.all(20.0),
                                                   child: Column(
                                                     mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,7 +367,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                                         ),
                                                       ),
                                                       Container(
-                                                        width: 230,
+                                                        width: 200,
                                                         child: Text(
                                                           newpasslist[index].title,
                                                           softWrap: true,
@@ -513,6 +473,10 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                   child: PageView.builder(
                                     itemCount: recommendpasslist.length,
                                     itemBuilder: (context, index) {
+                                      String imageURL = recommendpasslist[index].imageURL;
+                                      if (imageURL.contains("!@#")) {
+                                        imageURL = imageURL.split('!@#')[0];
+                                      };
                                       return GestureDetector(
                                         onTap: () {
                                           // 해당 항목을 눌렀을 때 passinfoscreen으로 이동
@@ -527,28 +491,28 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(0),
+                                                borderRadius: BorderRadius.circular(20),
                                                 color: Colors.grey,
                                                 image: DecorationImage(
-                                                  image: NetworkImage(recommendpasslist[index].imageURL),
+                                                  image: NetworkImage(imageURL),
                                                   fit: BoxFit.cover,
                                                   colorFilter: ColorFilter.mode(
-                                                    Colors.black.withOpacity(0.1), // 어둡게 만들기 위한 색상 및 투명도 설정
+                                                    Colors.black.withOpacity(0.3), // 어둡게 만들기 위한 색상 및 투명도 설정
                                                     BlendMode.darken, // 어둡게 만들기 위해 BlendMode.darken 사용
                                                   ),
                                                 ),
                                               ),
                                               width: double.infinity,
                                               child: Align(
-                                                alignment: Alignment.bottomLeft, // 왼쪽 하단으로 정렬
+                                                alignment: Alignment.topLeft, // 왼쪽 하단으로 정렬
                                                 child: Padding(
-                                                  padding: EdgeInsets.all(10.0),
+                                                  padding: EdgeInsets.all(20.0),
                                                   child: Column(
                                                     mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Container(
-                                                        width: 230,
+                                                        width: 200,
                                                         child: Text(
                                                           recommendpasslist[index].title,
                                                           softWrap: true,
@@ -646,44 +610,6 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
               )
           )
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.shade50,
-                spreadRadius: 1,
-                blurRadius: 5,
-                offset: Offset(0, -3)
-            ),
-          ],
-        ),
-        width: MediaQuery.of(context).size.width - 30,
-        height: 55.0, // 버튼의 높이
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => passinfoscreen(passID: 0),
-              ),
-            );
-          },
-          child: Text(
-            '조회하기',
-            style: TextStyle(
-              fontSize: 15.5,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Color.fromRGBO(0, 51, 102, 1.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0), // 원하는 테두리 모양을 적용할 수 있습니다.
-            // 더 각진 테두리를 원하면 BorderRadius.circular()의 값 조절
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

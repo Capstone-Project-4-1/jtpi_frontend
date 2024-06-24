@@ -44,7 +44,7 @@ class PassDetailInfo{
       stationNames: json['stationNames'] ?? '',
       break_even_usage: json['break_even_usage'] ?? '',
       description_information: json['productDescription'] ?? '',
-      benefit_information: json['benefit_information'] ?? '별도로 제공되는 혜택이 없습니다.',
+      benefit_information: json['benefit_information'] ?? '',
       reservation_information: json['reservation_information'] ?? '',
       refund_information: json['refund_information'] ?? '',
     );
