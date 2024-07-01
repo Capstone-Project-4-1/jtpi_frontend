@@ -60,7 +60,7 @@ class _mainscreenState extends State<mainscreen> with SingleTickerProviderStateM
 
   ////
   Future<List<PassPreview>> _getpasses(String passtype) async {
-    final response = await http.get(Uri.parse('http://54.180.69.13:8080/passes/slideshow/' + passtype));
+    final response = await http.get(Uri.parse('http://3.37.201.151:8080/passes/slideshow/' + passtype));
 
     try {
       if (response.statusCode == 200) {

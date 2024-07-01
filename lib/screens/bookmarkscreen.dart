@@ -61,7 +61,7 @@ class _bookmarkscreenState extends State<bookmarkscreen> {
       for (String _passId in _bookmarked) {
         print('passId : ' + _passId);
         final response = await http.post(
-          Uri.parse('http://54.180.69.13:8080/passes/bookmark'),
+          Uri.parse('http://3.37.201.151:8080/passes/bookmark'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },

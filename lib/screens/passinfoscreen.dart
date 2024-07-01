@@ -58,7 +58,7 @@ class _passinfoscreenState extends State<passinfoscreen> with SingleTickerProvid
   ////
   Future<List<PassDetailInfo>> passdetailinfo(String id) async {
 
-    final response = await http.get(Uri.parse('http://54.180.69.13:8080/passes/'+'${id}'));
+    final response = await http.get(Uri.parse('http://3.37.201.151:8080/passes/'+'${id}'));
 
     try {
       if (response.statusCode == 200) {

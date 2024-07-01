@@ -75,7 +75,7 @@ class _searchscreenState extends State<searchscreen> {
       print('흐어어');
       print(jsonEncode(searchParams));
       final response = await http.post(
-        Uri.parse('http://54.180.69.13:8080/passes/search'),
+        Uri.parse('http://3.37.201.151:8080/passes/search'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
